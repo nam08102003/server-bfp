@@ -32,6 +32,9 @@ try {
   connectDB(process.env.DATABASE_URL);
 
   // Route api
+  server.use("/", (req, res) => {
+    res.status(200).json("Server");
+  });
   server.use("/v1/auth", require("./api/auth.js")),
     server.use("/api/users", require("./api/user.js")),
     server.use("/api/blogs", require("./api/blog.js")),
