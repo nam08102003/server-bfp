@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "booking-football-pitch",
   "builds": [
      { "src": "./server.js", "use": "@vercel/node" }
   ],
