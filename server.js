@@ -6,17 +6,13 @@ try {
   const cookieParser = require("cookie-parser");
   const connectDB = require("./utilsServer/connectDB.js");
 
-  const isProd = process.env.NODE_ENV === "production";
-
   require("dotenv").config();
   const port = process.env.PORT || 3000;
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: false }));
 
-  if (isProd) {
-    server.use(compression());
-  }
+  server.use(compression());
 
   server.use("/static", express.static(path.join(__dirname, "public")));
 
