@@ -1,9 +1,9 @@
-const router = require('express').Router();
-const CitiesModel = require('../models/Cities.js');
-const DistrictsModel = require('../models/Districts.js');
-const WardsModel = require('../models/Wards.js');
+const router = require("express").Router();
+const CitiesModel = require("../models/Cities.js");
+const DistrictsModel = require("../models/Districts.js");
+const WardsModel = require("../models/Wards.js");
 
-router.get('/getlistCity', async (req, res) => {
+router.get("/getlistCity", async (req, res) => {
   try {
     await CitiesModel.find()
       .then((result) => {
@@ -17,7 +17,7 @@ router.get('/getlistCity', async (req, res) => {
   }
 });
 
-router.get('/getlistDistrict/', async (req, res) => {
+router.get("/getlistDistrict/", async (req, res) => {
   try {
     const { id } = req.query;
     await DistrictsModel.find({ codeCity: id })
@@ -32,7 +32,15 @@ router.get('/getlistDistrict/', async (req, res) => {
   }
 });
 
-router.get('/getlistWard/', async (req, res) => {
+router.post("/addoneDistrict", async (req, res) => {
+  try {
+    res.status(200).json(req.body);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+router.get("/getlistWard/", async (req, res) => {
   try {
     const { id } = req.query;
     await WardsModel.find({ codeDistrict: id })
