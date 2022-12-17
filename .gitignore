@@ -4,8 +4,5 @@
 # local env files
 .env*.local
 
-# vercel
-.vercel
-
 # production
 /build
