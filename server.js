@@ -1,5 +1,6 @@
 try {
   const express = require("express");
+  const compression = require("compression");
   const server = express();
   const path = require("path");
   const bodyParser = require("body-parser");
@@ -28,9 +29,6 @@ try {
   connectDB(process.env.DATABASE_URL);
 
   // Route api
-  server.use("/", (req, res) => {
-    res.status(200).json("Server");
-  });
   server.use("/v1/auth", require("./api/auth.js")),
     server.use("/api/users", require("./api/user.js")),
     server.use("/api/blogs", require("./api/blog.js")),
@@ -39,10 +37,13 @@ try {
     server.use("/api/saleOff", require("./api/saleOff.js")),
     server.use("/api/booking", require("./api/booking.js"));
 
+  server.use("/", (req, res) => {
+    res.status(200).json("Server");
+  });
   server.listen(port, (err) => {
     if (err) throw err;
     console.log(`Example app listening on port ${port}`);
   });
 } catch (err) {
-  if (err) throw err;
+  console.log(err);
 }
