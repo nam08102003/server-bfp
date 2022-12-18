@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Admin = new mongoose.Schema(
   {
@@ -14,18 +14,22 @@ const Admin = new mongoose.Schema(
     phone: {
       type: String,
     },
+    admin: {
+      type: Boolean,
+      default: true,
+    },
     accessToken: {
       type: String,
-      default: '',
+      default: "",
     },
     refeshToken: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   { timestamps: true }
 );
 
-const AdminModel = mongoose.model('Admin', Admin);
+const AdminModel = mongoose.model("Admin", Admin);
 
 module.exports = AdminModel;

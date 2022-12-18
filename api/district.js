@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const SaleOffModel = require("../models/SaleOff.js");
+const DistrictsModel = require("../models/Districts.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const {
   createNewService,
@@ -12,10 +12,10 @@ const {
 router.post("/addone", async (req, res) => {
   try {
     const message = {
-      success: "Thêm khuyến mại thành công.",
+      success: "Thêm quận thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(SaleOffModel, req.body);
+    const result = createNewService(DistrictsModel, req.body);
     if (result) {
       res.status(200).json({
         success: true,
@@ -33,7 +33,7 @@ router.post("/addone", async (req, res) => {
 });
 
 router.get("/getlist", async (req, res) => {
-  await getListService(SaleOffModel)
+  await getListService(DistrictsModel)
     .then((result) => {
       res.status(200).json(result);
     })
@@ -46,7 +46,7 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await getOneService(SaleOffModel, id)
+      await getOneService(DistrictsModel, id)
         .then((result) => {
           res.status(200).json(result);
         })
@@ -66,10 +66,10 @@ router.put("/updateone/", async (req, res) => {
     const { id } = req.query;
     const { data } = req.body;
     const message = {
-      success: "Sửa khuyến mại thành công.",
+      success: "Sửa quận thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await updateOneService(SaleOffModel, id, data)
+    await updateOneService(DistrictsModel, id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -91,11 +91,11 @@ router.delete("/deleteone/", async (req, res) => {
   try {
     const { id } = req.query;
     const message = {
-      success: "Xóa khuyến mại thành công.",
+      success: "Xóa quận thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (id) {
-      await deleteOneService(SaleOffModel, id)
+      await deleteOneService(DistrictsModel, id)
         .then((result) => {
           res.status(200).json({
             success: true,

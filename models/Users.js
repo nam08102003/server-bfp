@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Users = new mongoose.Schema(
   {
@@ -22,7 +22,7 @@ const Users = new mongoose.Schema(
     },
     address: {
       type: String,
-      default: '',
+      default: "",
     },
     statusActive: {
       type: Boolean,
@@ -44,23 +44,27 @@ const Users = new mongoose.Schema(
     },
     gender: {
       type: String,
-      default: '',
+      default: "",
     },
     birthday: {
       type: Date,
     },
+    accoutsPaypal: {
+      type: Array,
+      default: [],
+    },
     accessToken: {
       type: String,
-      default: '',
+      default: "",
     },
     refeshToken: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   { timestamps: true }
 );
 
-const UsersModel = mongoose.model('Users', Users);
+const UsersModel = mongoose.model("Users", Users);
 
 module.exports = UsersModel;
