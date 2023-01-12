@@ -11,7 +11,7 @@ try {
   require("dotenv").config();
   const port = process.env.PORT || 3000;
 
-  app.use(cors());
+  server.use(cors());
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: false }));
