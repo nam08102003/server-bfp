@@ -3,12 +3,15 @@ try {
   const compression = require("compression");
   const server = express();
   const path = require("path");
+  var cors = require("cors");
   const bodyParser = require("body-parser");
   const cookieParser = require("cookie-parser");
   const connectDB = require("./services/connectDB.js");
 
   require("dotenv").config();
   const port = process.env.PORT || 3000;
+
+  app.use(cors());
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: false }));
