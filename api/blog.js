@@ -35,6 +35,7 @@ router.post("/addone", async (req, res) => {
 router.get("/getlist", async (req, res) => {
   await getListService(BlogsModel)
     .then((result) => {
+      res.setHeader("success", true);
       res.status(200).json(result);
     })
     .catch((err) => {
