@@ -32,8 +32,8 @@ router.post("/register", async (req, res) => {
 
     if (!usernameDB && !emailDB) {
       //   Nếu user không có thì hash password và lưu vào DB
-      const salt = await bcryptjs.genSaltSync(10);
-      const hashPassword = await bcryptjs.hashSync(password, salt);
+      const salt = bcryptjs.genSaltSync(10);
+      const hashPassword = bcryptjs.hashSync(password, salt);
 
       await UsersModel.create({
         username,
