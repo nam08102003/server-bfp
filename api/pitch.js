@@ -15,7 +15,8 @@ router.post("/addone", async (req, res) => {
       success: "Thêm sân bóng thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(PitchsModel, req.body);
+    const data = req.body.data;
+    const result = createNewService(PitchsModel, data);
     if (result) {
       res.status(200).json({
         success: true,
@@ -64,7 +65,7 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
-    const { data } = req.body;
+    const data = req.body.data;
     const message = {
       success: "Sửa sân bóng thành công.",
       fail: "Thất bại. Vui lòng thử lại",

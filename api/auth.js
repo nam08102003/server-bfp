@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json(req.body);
+    res.status(500).json(err);
   }
 });
 
@@ -138,10 +138,9 @@ router.post("/login", async (req, res) => {
             res.status(200).json({
               success: true,
               username,
+              email,
               roleId: userDB.roleId,
               messages,
-              accessToken,
-              refeshToken,
             });
           } else {
             messages.messagePasswordField =
