@@ -134,13 +134,23 @@ router.post("/login", async (req, res) => {
                 }
               );
             }
+            await UsersModel.updateOne(
+              {
+                username,
+              },
+              {
+                $set: {
+                  statusActive: true,
+                },
+              }
+            );
             messages.messageMain = "Đăng nhập thành công.";
             res.status(200).json({
               success: true,
               username,
-              email,
               roleId: userDB.roleId,
               messages,
+              isActive: true,
             });
           } else {
             messages.messagePasswordField =
