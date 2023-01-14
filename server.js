@@ -14,20 +14,20 @@ try {
   server.use(cors());
 
   server.use(express.json());
-  server.use(express.urlencoded({ extended: false }));
+  server.use(express.urlencoded({ extended: true }));
 
   server.use(compression());
 
   server.use("/static", express.static(path.join(__dirname, "public")));
 
+  server.use(cookieParser());
   server.use(bodyParser.json());
   server.use(
     bodyParser.urlencoded({
-      extended: false,
+      extended: true,
     })
   );
-
-  server.use(cookieParser());
+  server.use(bodyParser.raw());
 
   connectDB(process.env.DATABASE_URL);
 

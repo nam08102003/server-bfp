@@ -5,7 +5,7 @@ const UsersModel = require("../models/Users.js");
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, ...others } = req.body;
+    const { username, email, password, ...others } = req.body.data;
     // Lấy thông tin user gửi lên
     const messages = {
       messageUserField: "",
@@ -67,7 +67,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body.data;
     const messages = {
       messageUserField: "",
       messageEmailField: "",
@@ -161,10 +161,6 @@ router.post("/login", async (req, res) => {
       res.status(500).json({
         success: false,
         messages,
-        userDB,
-        data: req.body,
-        username,
-        password,
       });
     }
   } catch (err) {
