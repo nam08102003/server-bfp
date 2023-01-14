@@ -162,7 +162,7 @@ router.post("/login", async (req, res) => {
         success: false,
         messages,
         userDB,
-        data: req.body,
+        data: req,
       });
     }
   } catch (err) {
