@@ -61,13 +61,13 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
+    res.status(500).json(err);
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body.data;
     const messages = {
       messageUserField: "",
       messageEmailField: "",
