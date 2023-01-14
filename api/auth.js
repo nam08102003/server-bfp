@@ -163,6 +163,8 @@ router.post("/login", async (req, res) => {
         messages,
         userDB,
         data: req.body,
+        username,
+        password,
       });
     }
   } catch (err) {
