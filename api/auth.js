@@ -75,7 +75,6 @@ router.post("/login", async (req, res) => {
       messageMain: "",
     };
 
-    username.stringify();
     const userDB = await UsersModel.findOne({
       username,
     });
