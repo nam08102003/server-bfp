@@ -5,8 +5,8 @@ const UsersModel = require("../models/Users.js");
 
 router.post("/register", async (req, res) => {
   try {
-    // Lấy thông tin user gửi lên
     const { username, email, password, ...others } = req.body;
+    // Lấy thông tin user gửi lên
     const messages = {
       messageUserField: "",
       messageEmailField: "",
@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(req.body);
   }
 });
 
