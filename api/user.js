@@ -11,11 +11,12 @@ const {
 
 router.post("/addone", async (req, res) => {
   try {
+    const data = req.body.data;
     const message = {
       success: "Thêm tài khoản thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(UsersModel, req.body);
+    const result = createNewService(UsersModel, data);
     if (result) {
       res.status(200).json({
         success: true,
@@ -64,7 +65,7 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
-    const { data } = req.body;
+    const data = req.body.data;
     const message = {
       success: "Sửa tài khoản thành công.",
       fail: "Thất bại. Vui lòng thử lại",
