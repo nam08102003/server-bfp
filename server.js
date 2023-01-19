@@ -33,6 +33,7 @@ try {
 
   // Route api
   server.use("/v1/auth", require("./api/auth.js")),
+    server.use("/v2/auth", require("./api/admin.js")),
     server.use("/api/users", require("./api/user.js")),
     server.use("/api/blogs", require("./api/blog.js")),
     server.use("/api/pitchs", require("./api/pitch.js")),

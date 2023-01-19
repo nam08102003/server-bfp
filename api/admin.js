@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const UsersModel = require("../models/Users.js");
+const AdminModel = require("../models/Admin.js");
 
 router.post("/register", async (req, res) => {
   try {
@@ -14,15 +14,15 @@ router.post("/register", async (req, res) => {
       messageMain: "",
     };
     // Kiếm tra user có trong DB hay không
-    const usernameDB = await UsersModel.findOne({
+    const adminDB = await AdminModel.findOne({
       username,
     });
 
-    const emailDB = await UsersModel.findOne({
+    const emailDB = await AdminModel.findOne({
       email,
     });
 
-    if (usernameDB) {
+    if (adminDB) {
       messages.messageUserField = "Tên tài khoản đã tồn tại";
     }
 
@@ -30,12 +30,12 @@ router.post("/register", async (req, res) => {
       messages.messageEmailField = "Email đã tồn tại";
     }
 
-    if (!usernameDB && !emailDB) {
+    if (!adminDB && !emailDB) {
       //   Nếu user không có thì hash password và lưu vào DB
       const salt = bcryptjs.genSaltSync(10);
       const hashPassword = bcryptjs.hashSync(password, salt);
 
-      await UsersModel.create({
+      await AdminModel.create({
         username,
         email,
         password: hashPassword,
@@ -65,26 +65,26 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body.data;
+    const { username, password, ...others } = req.body.data;
     const messages = {
       messageUserField: "",
       messageEmailField: "",
       messagePasswordField: "",
       messageMain: "",
     };
-
-    const userDB = await UsersModel.findOne({
+    const adminDB = await AdminModel.findOne({
       username,
     });
-    if (userDB) {
+
+    if (adminDB) {
       bcryptjs
-        .compare(password, userDB.password)
+        .compare(password, adminDB.password)
         .then(async (result) => {
           if (result) {
             const payload = {
               username,
-              id: userDB._id,
-              roleId: userDB.roleId,
+              id: adminDB._id,
+              roleId: adminDB.roleId,
             };
             const accessToken = jwt.sign(
               payload,
@@ -98,7 +98,7 @@ router.post("/login", async (req, res) => {
             res.cookie("token", accessToken);
 
             if (accessToken) {
-              UsersModel.updateOne(
+              AdminModel.updateOne(
                 { username },
                 {
                   $set: {
@@ -119,7 +119,7 @@ router.post("/login", async (req, res) => {
               }
             );
             if (refeshToken) {
-              UsersModel.updateOne(
+              AdminModel.updateOne(
                 { username },
                 {
                   $set: {
@@ -131,28 +131,16 @@ router.post("/login", async (req, res) => {
                 }
               );
             }
-            await UsersModel.updateOne(
-              {
-                username,
-              },
-              {
-                $set: {
-                  statusActive: true,
-                },
-              }
-            );
             messages.messageMain = "Đăng nhập thành công.";
             res.status(200).json({
               success: true,
               username,
               id: adminDB._id,
-              roleId: userDB.roleId,
+              roleId: adminDB.roleId,
               messages,
-              isActive: true,
             });
           } else {
-            messages.messagePasswordField =
-              "Sai mật khẩu. Vui lòng nhập lại mật khẩu chính xác.";
+            messages.messagePasswordField = "Sai mật khẩu";
             res.status(500).json({
               success: false,
               messages,
@@ -163,8 +151,7 @@ router.post("/login", async (req, res) => {
           console.log(error);
         });
     } else {
-      messages.messageUserField =
-        "Tài khoản không tồn tại. Vui lòng đăng ký tài khoản.";
+      messages.messageUserField = "Tài khoản không tồn tại";
       res.status(500).json({
         success: false,
         messages,
@@ -174,5 +161,3 @@ router.post("/login", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-module.exports = router;

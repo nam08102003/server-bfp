@@ -18,6 +18,10 @@ const Admin = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    roleId: {
+      type: Number,
+      default: 0,
+    },
     accessToken: {
       type: String,
       default: "",
