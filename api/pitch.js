@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
+const PicthDetailModel = require("../models/PitchDetail.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const {
   createNewService,
@@ -15,8 +16,19 @@ router.post("/addone", async (req, res) => {
       success: "Thêm sân bóng thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const data = req.body.data;
-    const result = createNewService(PitchsModel, data);
+    const data = req.body;
+    let listPitchs = [];
+    const { infoPitchs, ...others } = data;
+    if (infoPitchs) {
+      for (let i = 0; i < infoPitchs.length; i++) {
+        const dataPitch = infoPitchs[i];
+        const newPitch = await PicthDetailModel.create(dataPitch);
+        const idPitch = "" + newPitch._id;
+        listPitchs.push(idPitch);
+      }
+    }
+    const dataCreate = { listPitchs, ...others };
+    const result = createNewService(PitchsModel, dataCreate);
     if (result) {
       res.status(200).json({
         success: true,

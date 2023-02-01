@@ -1,17 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Districts = new mongoose.Schema({
   codeDistrict: {
-    type: Number,
+    type: String,
   },
   title: {
     type: String,
   },
   codeCity: {
-    type: Number,
+    type: String,
   },
 });
 
-const DistrictsModel = mongoose.model('Districts', Districts);
+const DistrictsModel = mongoose.model("Districts", Districts);
 
 module.exports = DistrictsModel;

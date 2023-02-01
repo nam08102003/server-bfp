@@ -83,7 +83,7 @@ router.post("/login", async (req, res) => {
           if (result) {
             const payload = {
               username,
-              id: userDB._id,
+              id: "" + userDB._id,
               roleId: userDB.roleId,
             };
             const accessToken = jwt.sign(

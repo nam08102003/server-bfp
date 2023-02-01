@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Booking = new mongoose.Schema(
   {
@@ -25,8 +25,7 @@ const Booking = new mongoose.Schema(
       default: false,
     },
     price: {
-      type: Number,
-      default: 0,
+      type: String,
     },
     message: {
       type: String,
@@ -35,6 +34,6 @@ const Booking = new mongoose.Schema(
   { timestamps: true }
 );
 
-const BookingModel = mongoose.model('Booking', Booking);
+const BookingModel = mongoose.model("Booking", Booking);
 
 module.exports = BookingModel;

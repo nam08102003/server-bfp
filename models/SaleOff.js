@@ -1,17 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const SaleOff = new mongoose.Schema(
   {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     value: {
-      type: Number,
+      type: String,
       default: 0,
     },
     startDay: {
@@ -29,6 +29,6 @@ const SaleOff = new mongoose.Schema(
   { timestamps: true }
 );
 
-const SaleOffModel = mongoose.model('SaleOff', SaleOff);
+const SaleOffModel = mongoose.model("SaleOff", SaleOff);
 
 module.exports = SaleOffModel;

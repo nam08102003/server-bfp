@@ -1,78 +1,71 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Pitchs = new mongoose.Schema(
   {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     description: {
       type: String,
-      default: '',
+      default: "",
     },
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     address: {
       type: String,
-      default: '',
+      default: "",
     },
     phone: {
-      type: Number,
+      type: String,
       default: null,
     },
-    typePitch: {
-      type: Number,
+    listPitchs: {
+      type: Array,
+      default: [],
     },
     idOwner: {
       type: String,
     },
     codeCity: {
-      type: Number,
+      type: String,
     },
     codeDistrict: {
-      type: Number,
+      type: String,
     },
     codeWard: {
-      type: Number,
+      type: String,
     },
     isSaleOff: {
       type: Boolean,
       default: false,
-    },
-    isBooking: {
-      type: Boolean,
-      default: false,
-    },
-    countBooking: {
-      type: Number,
-      default: 0,
-    },
-    timeOpen: {
-      type: String,
-      default: '',
-    },
-    timeEnd: {
-      type: String,
-      default: '',
-    },
-    listPrice: {
-      type: Array,
-      default: [],
     },
     services: {
       type: Array,
       default: [],
     },
     vote: {
-      type: Number,
+      type: String,
       default: 0,
+    },
+    facebook: {
+      type: String,
+      default: "",
+    },
+    website: {
+      type: String,
+      default: "",
+    },
+    image: {
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }
 );
 
-const PitchsModel = mongoose.model('Pitchs', Pitchs);
+const PitchsModel = mongoose.model("Pitchs", Pitchs);
 
 module.exports = PitchsModel;
