@@ -11,7 +11,7 @@ const {
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Thêm phường thành công.",
       fail: "Thất bại. Vui lòng thử lại",
