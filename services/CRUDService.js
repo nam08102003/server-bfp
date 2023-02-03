@@ -2,8 +2,8 @@ const createNewService = async (schemaName, data) => {
   try {
     await schemaName
       .create(data)
-      .then(() => {
-        return true;
+      .then((result) => {
+        return result;
       })
       .catch(() => {
         return false;

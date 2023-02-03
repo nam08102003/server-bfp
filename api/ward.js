@@ -17,6 +17,8 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     const result = createNewService(WardsModel, data);
+    console.log(data);
+    console.log(result);
     if (result) {
       res.status(200).json({
         success: true,
