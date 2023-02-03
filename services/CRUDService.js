@@ -3,7 +3,7 @@ const createNewService = async (schemaName, data) => {
     await schemaName
       .create(data)
       .then((result) => {
-        return result;
+        return true;
       })
       .catch(() => {
         return false;
@@ -33,7 +33,10 @@ const getOneService = (schemaName, id) => {
     return schemaName
       .findById(id)
       .then((result) => {
-        return result;
+        return {
+          id: "" + result._id,
+          ...result._doc,
+        };
       })
       .catch((err) => {
         return err;

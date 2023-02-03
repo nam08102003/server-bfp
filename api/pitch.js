@@ -16,29 +16,52 @@ router.post("/addone", async (req, res) => {
       success: "Thêm sân bóng thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const data = req.body.params;
-    let list = [];
-    const { listPitchs, ...others } = data;
-    if (listPitchs) {
-      for (let i = 0; i < listPitchs.length; i++) {
-        const dataPitch = listPitchs[i];
-        const newPitch = await PicthDetailModel.create(dataPitch);
-        const idPitch = "" + newPitch._id;
-        list.push(idPitch);
+    const data = req.body;
+    // let listIdPitch = [];
+    let { listPitchs, ...others } = data;
+
+    if (listPitchs.length > 0) {
+      for (let i = 1; i <= listPitchs.length; i++) {
+        // const dataPitch = listPitchs[i - 1];
+        const amountPitch = Number(listPitchs[i - 1].amountPitch);
+        listPitchs[i - 1].children = [];
+        for (let j = 1; j <= amountPitch; j++) {
+          const randomId = () => {
+            return Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1);
+          };
+          const uniqueId =
+            randomId() +
+            randomId() +
+            randomId() +
+            randomId() +
+            randomId() +
+            randomId();
+          console.log(uniqueId);
+          // const dataPitchDetail = { ...dataPitch, children}
+          let dataChildren = { id: uniqueId, title: `${j}` };
+          listPitchs[i - 1].children.push(dataChildren);
+          // const newPitch = await PicthDetailModel.create(dataPitch);
+          // const idPitch = "" + newPitch._id;
+          // listIdPitch.push(idPitch);
+        }
       }
-    }
-    const dataCreate = { listPitchs: list, ...others };
-    const result = createNewService(PitchsModel, dataCreate);
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: message.success,
-      });
+      const dataCreate = { listPitchs, ...others };
+      const result = createNewService(PitchsModel, dataCreate);
+      if (result) {
+        res.status(200).json({
+          success: true,
+          message: message.success,
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: message.fail,
+        });
+      }
     } else {
-      res.status(500).json({
-        success: false,
-        message: message.fail,
-      });
+      res.status(500).json("Không có thông tin sân bóng");
     }
   } catch (err) {
     if (err) throw err;
