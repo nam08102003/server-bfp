@@ -16,7 +16,7 @@ router.post("/addone", async (req, res) => {
       success: "Thêm sân bóng thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const data = req.body;
+    const data = req.body.params;
     let listPitchs = [];
     const { infoPitchs, ...others } = data;
     if (infoPitchs) {
