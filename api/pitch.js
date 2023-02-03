@@ -17,17 +17,17 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     const data = req.body.params;
-    let listPitchs = [];
-    const { infoPitchs, ...others } = data;
-    if (infoPitchs) {
-      for (let i = 0; i < infoPitchs.length; i++) {
-        const dataPitch = infoPitchs[i];
+    let list = [];
+    const { listPitchs, ...others } = data;
+    if (listPitchs) {
+      for (let i = 0; i < listPitchs.length; i++) {
+        const dataPitch = listPitchs[i];
         const newPitch = await PicthDetailModel.create(dataPitch);
         const idPitch = "" + newPitch._id;
-        listPitchs.push(idPitch);
+        list.push(idPitch);
       }
     }
-    const dataCreate = { listPitchs, ...others };
+    const dataCreate = { listPitchs: list, ...others };
     const result = createNewService(PitchsModel, dataCreate);
     if (result) {
       res.status(200).json({

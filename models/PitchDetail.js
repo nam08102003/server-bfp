@@ -8,24 +8,9 @@ const PitchDetail = mongoose.Schema(
     amountPitch: {
       type: String,
     },
-    price: {
-      type: String,
-    },
-    timeStart: {
-      type: String,
-    },
-    timeEnd: {
-      type: String,
-    },
-    dayStart: {
-      type: String,
-    },
-    dayEnd: {
-      type: String,
-    },
-    isBooking: {
-      type: Boolean,
-      default: false,
+    infoPitchs: {
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }
