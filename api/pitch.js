@@ -48,18 +48,19 @@ router.post("/addone", async (req, res) => {
         }
       }
       const dataCreate = { listPitchs, ...others };
-      const result = await createNewService(PitchsModel, dataCreate);
-      if (result) {
-        res.status(200).json({
-          success: true,
-          message: message.success,
+      await PitchsModel.create(dataCreate)
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: message.success,
+          });
+        })
+        .catch(() => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
+          });
         });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: message.fail,
-        });
-      }
     } else {
       res.status(500).json("Không có thông tin sân bóng");
     }
