@@ -48,7 +48,7 @@ router.post("/addone", async (req, res) => {
         }
       }
       const dataCreate = { listPitchs, ...others };
-      const result = createNewService(PitchsModel, dataCreate);
+      const result = await createNewService(PitchsModel, dataCreate);
       if (result) {
         res.status(200).json({
           success: true,
