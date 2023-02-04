@@ -76,7 +76,7 @@ router.get("/getlist", async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Thành công",
-        result: result.map((item) => {
+        result: result._doc.map((item) => {
           return {
             key: "" + item._id,
             ...item,
