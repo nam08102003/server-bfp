@@ -76,7 +76,10 @@ router.get("/getlist", async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Thành công",
-        result,
+        result: {
+          ...result,
+          key: result._id,
+        },
       });
     })
     .catch(() => {
@@ -96,7 +99,10 @@ router.get("/getone/", async (req, res) => {
           res.status(200).json({
             success: true,
             message: "Thành công",
-            result,
+            result: {
+              ...result,
+              key: result._id,
+            },
           });
         })
         .catch((err) => {
