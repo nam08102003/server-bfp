@@ -11,9 +11,8 @@ try {
   require("dotenv").config();
   const port = process.env.PORT || 3000;
 
-  server.use(cors({ origin: true }));
-
   server.use(express.json());
+  server.use(cors({ origin: true }));
   server.use(express.urlencoded({ extended: true }));
 
   server.use(compression());
