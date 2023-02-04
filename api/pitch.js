@@ -40,7 +40,7 @@ router.post("/addone", async (req, res) => {
             randomId();
           console.log(uniqueId);
           // const dataPitchDetail = { ...dataPitch, children}
-          let dataChildren = { id: uniqueId, title: `${j}` };
+          let dataChildren = { id: uniqueId, title: `${j}`, isBooking: false };
           listPitchs[i - 1].children.push(dataChildren);
           // const newPitch = await PicthDetailModel.create(dataPitch);
           // const idPitch = "" + newPitch._id;
