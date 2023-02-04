@@ -16,30 +16,38 @@ router.post("/addone", async (req, res) => {
       success: "Thêm khuyến mại thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(SaleOffModel, data);
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: message.success,
+    await SaleOffModel.create(data)
+      .then(() => {
+        res.status(200).json({
+          success: true,
+          message: message.success,
+        });
+      })
+      .catch(() => {
+        res.status(500).json({
+          success: false,
+          message: message.fail,
+        });
       });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: message.fail,
-      });
-    }
   } catch (err) {
     if (err) throw err;
   }
 });
 
 router.get("/getlist", async (req, res) => {
-  await getListService(SaleOffModel)
+  await SaleOffModel.find()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        success: true,
+        message: "Thành công",
+        result,
+      });
     })
-    .catch((err) => {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+    .catch(() => {
+      res.status(500).json({
+        success: false,
+        message: "Có lỗi. Vui lòng thử lại",
+      });
     });
 });
 
@@ -47,15 +55,26 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await getOneService(SaleOffModel, id)
+      await SaleOffModel.findById(id)
         .then((result) => {
-          res.status(200).json(result);
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            result,
+          });
         })
         .catch((err) => {
-          res.status(500).json("Có lỗi. Vui lòng thử lại.");
+          res.status(500).json({
+            success: false,
+            message: "Có lỗi. Vui lòng thử lại.",
+            errors: err,
+          });
         });
     } else {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
   } catch (err) {
     if (err) throw err;
@@ -70,7 +89,7 @@ router.put("/updateone/", async (req, res) => {
       success: "Sửa khuyến mại thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await updateOneService(SaleOffModel, id, data)
+    await SaleOffModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -96,7 +115,7 @@ router.delete("/deleteone/", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (id) {
-      await deleteOneService(SaleOffModel, id)
+      await SaleOffModel.findByIdAndDelete(id)
         .then((result) => {
           res.status(200).json({
             success: true,
@@ -110,7 +129,10 @@ router.delete("/deleteone/", async (req, res) => {
           });
         });
     } else {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
   } catch (err) {
     if (err) throw err;

@@ -11,35 +11,43 @@ const {
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Thêm tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(BlogsModel, data);
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: message.success,
+    await BlogsModel.create(data)
+      .then(() => {
+        res.status(200).json({
+          success: true,
+          message: message.success,
+        });
+      })
+      .catch(() => {
+        res.status(500).json({
+          success: false,
+          message: message.fail,
+        });
       });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: message.fail,
-      });
-    }
   } catch (err) {
     if (err) throw err;
   }
 });
 
 router.get("/getlist", async (req, res) => {
-  await getListService(BlogsModel)
+  await BlogsModel.find()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        success: true,
+        message: "Thành công",
+        result,
+      });
     })
-    .catch((err) => {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+    .catch(() => {
+      res.status(500).json({
+        success: false,
+        message: "Có lỗi. Vui lòng thử lại",
+      });
     });
 });
 
@@ -47,15 +55,26 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await getOneService(BlogsModel, id)
+      await BlogsModel.findById(id)
         .then((result) => {
-          res.status(200).json(result);
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            result,
+          });
         })
         .catch((err) => {
-          res.status(500).json("Có lỗi. Vui lòng thử lại.");
+          res.status(500).json({
+            success: false,
+            message: "Có lỗi. Vui lòng thử lại.",
+            errors: err,
+          });
         });
     } else {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
   } catch (err) {
     if (err) throw err;
@@ -70,7 +89,7 @@ router.put("/updateone/", verifyMiddleware.verifyEmployee, async (req, res) => {
       success: "Sửa tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await updateOneService(BlogsModel, id, data)
+    await BlogsModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -99,7 +118,7 @@ router.delete(
         fail: "Thất bại. Vui lòng thử lại",
       };
       if (id) {
-        await deleteOneService(BlogsModel, id)
+        await BlogsModel.findByIdAndDelete(id)
           .then((result) => {
             res.status(200).json({
               success: true,
@@ -113,7 +132,10 @@ router.delete(
             });
           });
       } else {
-        res.status(500).json("Có lỗi. Vui lòng thử lại.");
+        res.status(500).json({
+          success: false,
+          message: "Không có id",
+        });
       }
     } catch (err) {
       if (err) throw err;

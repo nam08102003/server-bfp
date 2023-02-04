@@ -16,30 +16,38 @@ router.post("/addone", async (req, res) => {
       success: "Thêm thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const result = createNewService(BookingModel, data);
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: message.success,
+    await BookingModel.create(data)
+      .then(() => {
+        res.status(200).json({
+          success: true,
+          message: message.success,
+        });
+      })
+      .catch(() => {
+        res.status(500).json({
+          success: false,
+          message: message.fail,
+        });
       });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: message.fail,
-      });
-    }
   } catch (err) {
     if (err) throw err;
   }
 });
 
 router.get("/getlist", async (req, res) => {
-  await getListService(BookingModel)
+  await BookingModel.find()
     .then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        success: true,
+        message: "Thành công",
+        result,
+      });
     })
-    .catch((err) => {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+    .catch(() => {
+      res.status(500).json({
+        success: false,
+        message: "Có lỗi. Vui lòng thử lại",
+      });
     });
 });
 
@@ -47,15 +55,26 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await getOneService(BookingModel, id)
+      await BookingModel.findById(id)
         .then((result) => {
-          res.status(200).json(result);
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            result,
+          });
         })
         .catch((err) => {
-          res.status(500).json("Có lỗi. Vui lòng thử lại.");
+          res.status(500).json({
+            success: false,
+            message: "Có lỗi. Vui lòng thử lại.",
+            errors: err,
+          });
         });
     } else {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
   } catch (err) {
     if (err) throw err;
@@ -70,7 +89,7 @@ router.put("/updateone/", async (req, res) => {
       success: "Sửa thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await updateOneService(BookingModel, id, data)
+    await BookingModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -96,7 +115,7 @@ router.delete("/deleteone/", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (id) {
-      await deleteOneService(BookingModel, id)
+      await BookingModel.findByIdAndDelete(id)
         .then((result) => {
           res.status(200).json({
             success: true,
@@ -110,7 +129,10 @@ router.delete("/deleteone/", async (req, res) => {
           });
         });
     } else {
-      res.status(500).json("Có lỗi. Vui lòng thử lại.");
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
   } catch (err) {
     if (err) throw err;
