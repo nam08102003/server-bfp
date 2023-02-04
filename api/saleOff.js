@@ -92,7 +92,7 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Sửa khuyến mại thành công.",
       fail: "Thất bại. Vui lòng thử lại",

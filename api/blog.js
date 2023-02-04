@@ -92,7 +92,7 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", verifyMiddleware.verifyEmployee, async (req, res) => {
   try {
     const { id } = req.query;
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Sửa tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
