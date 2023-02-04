@@ -43,7 +43,7 @@ router.get("/getlist", async (req, res) => {
         result: result.map((item) => {
           return {
             key: "" + item._id,
-            ...item,
+            ...item_doc,
           };
         }),
       });

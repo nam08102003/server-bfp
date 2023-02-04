@@ -40,10 +40,10 @@ router.get("/getlist", async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Thành công",
-        result: result._doc.map((item) => {
+        result: result.map((item) => {
           return {
             key: "" + item._id,
-            ...item,
+            ...item_doc,
           };
         }),
       });
