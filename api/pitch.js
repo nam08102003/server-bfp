@@ -76,10 +76,12 @@ router.get("/getlist", async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Thành công",
-        result: {
-          ...result,
-          key: result._id,
-        },
+        result: result.map((item) => {
+          return {
+            key: "" + item._id,
+            ...item,
+          };
+        }),
       });
     })
     .catch(() => {
