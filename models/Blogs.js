@@ -34,6 +34,9 @@ const Blogs = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    date: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
