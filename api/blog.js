@@ -37,12 +37,15 @@ router.post("/addone", async (req, res) => {
 router.get("/getlist", async (req, res) => {
   await BlogsModel.find()
     .then((result) => {
+      const randomId = () => {
+        return Math.floor((1 + Math.random()) * 0x100000000);
+      };
       res.status(200).json({
         success: true,
         message: "Thành công",
         result: result.map((item) => {
           return {
-            key: "" + item._id,
+            key: Number(randomId()),
             ...item._doc,
           };
         }),
