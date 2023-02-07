@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const Blogs = new mongoose.Schema(
   {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     description: {
       type: String,
-      default: '',
+      default: "",
     },
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     idTypeBlog: {
       type: Number,
@@ -20,7 +20,7 @@ const Blogs = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: '',
+      default: "",
     },
     idCreater: {
       type: String,
@@ -29,10 +29,14 @@ const Blogs = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    tags: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-const BlogsModel = mongoose.model('Blogs', Blogs);
+const BlogsModel = mongoose.model("Blogs", Blogs);
 
 module.exports = BlogsModel;

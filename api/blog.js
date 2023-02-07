@@ -1,13 +1,6 @@
 const router = require("express").Router();
 const BlogsModel = require("../models/Blogs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const {
-  createNewService,
-  getListService,
-  getOneService,
-  updateOneService,
-  deleteOneService,
-} = require("../services/CRUDService.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -16,19 +9,26 @@ router.post("/addone", async (req, res) => {
       success: "Thêm tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BlogsModel.create(data)
-      .then(() => {
-        res.status(200).json({
-          success: true,
-          message: message.success,
+    if (data) {
+      await BlogsModel.create(data)
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: message.success,
+          });
+        })
+        .catch(() => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
+          });
         });
-      })
-      .catch(() => {
-        res.status(500).json({
-          success: false,
-          message: message.fail,
-        });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: message.fail,
       });
+    }
   } catch (err) {
     if (err) throw err;
   }
