@@ -22,8 +22,9 @@ const Blogs = new mongoose.Schema(
       type: String,
       default: "",
     },
-    idCreater: {
+    author: {
       type: String,
+      default: "",
     },
     countRead: {
       type: Number,
