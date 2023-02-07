@@ -43,12 +43,13 @@ router.get("/getlist", async (req, res) => {
         result: result.map((item) => {
           return {
             key: "" + item._id,
-            ...item_doc,
+            ...item._doc,
           };
         }),
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).json({
         success: false,
         message: "Có lỗi. Vui lòng thử lại",
