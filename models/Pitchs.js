@@ -62,6 +62,10 @@ const Pitchs = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
