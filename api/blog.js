@@ -34,6 +34,38 @@ router.post("/addone", async (req, res) => {
   }
 });
 
+router.get("/getlist/", async (req, res) => {
+  const { page } = req.query;
+  const perPage = 8;
+  if (page) {
+    await BlogsModel.find()
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .then((result) => {
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          pagination: {
+            number: page,
+            length: result.length,
+          },
+          result: result.map((item) => {
+            return {
+              key: "" + item._id,
+              ...item._doc,
+            };
+          }),
+        });
+      })
+      .catch(() => {
+        res.status(500).json({
+          success: false,
+          message: "Có lỗi. Vui lòng thử lại",
+        });
+      });
+  }
+});
+
 router.get("/getlist", async (req, res) => {
   await BlogsModel.find()
     .then((result) => {

@@ -1,13 +1,6 @@
 const router = require("express").Router();
 const UsersModel = require("../models/Users.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const {
-  createNewService,
-  getListService,
-  getOneService,
-  updateOneService,
-  deleteOneService,
-} = require("../services/CRUDService.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -31,6 +24,38 @@ router.post("/addone", async (req, res) => {
       });
   } catch (err) {
     if (err) throw err;
+  }
+});
+
+router.get("/getlist/", async (req, res) => {
+  const { page } = req.query;
+  const perPage = 8;
+  if (page) {
+    await UsersModel.find()
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .then((result) => {
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          pagination: {
+            number: page,
+            length: result.length,
+          },
+          result: result.map((item) => {
+            return {
+              key: "" + item._id,
+              ...item._doc,
+            };
+          }),
+        });
+      })
+      .catch(() => {
+        res.status(500).json({
+          success: false,
+          message: "Có lỗi. Vui lòng thử lại",
+        });
+      });
   }
 });
 
