@@ -14,9 +14,8 @@ const Blogs = new mongoose.Schema(
       type: String,
       default: "",
     },
-    idTypeBlog: {
-      type: Number,
-      default: 43,
+    typeBlog: {
+      type: String,
     },
     image: {
       type: String,
