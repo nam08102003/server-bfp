@@ -61,7 +61,29 @@ router.post("/addone", async (req, res) => {
   }
 });
 
-router.get("/getlist/", async (req, res) => {
+router.get("/getlist", async (req, res) => {
+  await PitchsModel.find()
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "Thành công",
+        result: result.map((item) => {
+          return {
+            key: "" + item._id,
+            ...item._doc,
+          };
+        }),
+      });
+    })
+    .catch(() => {
+      res.status(500).json({
+        success: false,
+        message: "Có lỗi. Vui lòng thử lại",
+      });
+    });
+});
+
+router.get("/getlistpage/", async (req, res) => {
   const { page } = req.query;
   const perPage = 8;
   if (page) {
@@ -91,28 +113,6 @@ router.get("/getlist/", async (req, res) => {
         });
       });
   }
-});
-
-router.get("/getlist", async (req, res) => {
-  await PitchsModel.find()
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: "Thành công",
-        result: result.map((item) => {
-          return {
-            key: "" + item._id,
-            ...item._doc,
-          };
-        }),
-      });
-    })
-    .catch(() => {
-      res.status(500).json({
-        success: false,
-        message: "Có lỗi. Vui lòng thử lại",
-      });
-    });
 });
 
 router.get("/getone/", async (req, res) => {

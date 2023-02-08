@@ -34,7 +34,7 @@ router.post("/addone", async (req, res) => {
   }
 });
 
-router.get("/getlist/", async (req, res) => {
+router.get("/getlistpage/", async (req, res) => {
   const { page } = req.query;
   const perPage = 8;
   if (page) {
