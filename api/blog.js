@@ -148,40 +148,36 @@ router.put("/updateone/", verifyMiddleware.verifyEmployee, async (req, res) => {
   }
 });
 
-router.delete(
-  "/deleteone/",
-  verifyMiddleware.verifyEmployee,
-  async (req, res) => {
-    try {
-      const { id } = req.query;
-      const message = {
-        success: "Xóa tin tức thành công.",
-        fail: "Thất bại. Vui lòng thử lại",
-      };
-      if (id) {
-        await BlogsModel.findByIdAndDelete(id)
-          .then((result) => {
-            res.status(200).json({
-              success: true,
-              message: message.success,
-            });
-          })
-          .catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: message.fail,
-            });
+router.delete("/deleteone/", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const message = {
+      success: "Xóa tin tức thành công.",
+      fail: "Thất bại. Vui lòng thử lại",
+    };
+    if (id) {
+      await BlogsModel.findByIdAndDelete(id)
+        .then((result) => {
+          res.status(200).json({
+            success: true,
+            message: message.success,
           });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: "Không có id",
+        })
+        .catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
+          });
         });
-      }
-    } catch (err) {
-      if (err) throw err;
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Không có id",
+      });
     }
+  } catch (err) {
+    if (err) throw err;
   }
-);
+});
 
 module.exports = router;
