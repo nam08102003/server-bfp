@@ -61,7 +61,7 @@ router.post("/addone", async (req, res) => {
   }
 });
 
-router.get("/getlist", async (req, res) => {
+router.get("/getall", async (req, res) => {
   await PitchsModel.find()
     .then((result) => {
       res.status(200).json({
@@ -83,7 +83,7 @@ router.get("/getlist", async (req, res) => {
     });
 });
 
-router.get("/getlistpage/", async (req, res) => {
+router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
   const perPage = 8;
   if (page) {
@@ -95,7 +95,7 @@ router.get("/getlistpage/", async (req, res) => {
           success: true,
           message: "Thành công",
           pagination: {
-            number: page,
+            currentPage: page,
             length: result.length,
           },
           result: result.map((item) => {
