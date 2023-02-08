@@ -122,7 +122,7 @@ router.get("/getone/", async (req, res) => {
   }
 });
 
-router.put("/updateone/", verifyMiddleware.verifyEmployee, async (req, res) => {
+router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
     const data = req.body;
