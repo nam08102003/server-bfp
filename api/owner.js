@@ -4,12 +4,12 @@ const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Thêm tài khoản thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await UsersModel.create(data)
+    await UsersModel.create({ ...data, roleId: 3 })
       .then(() => {
         res.status(200).json({
           success: true,
@@ -31,7 +31,7 @@ router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
   const perPage = 8;
   if (page) {
-    await UsersModel.find({ roleId: 1 })
+    await UsersModel.find({ roleId: 3 })
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then((result) => {
@@ -60,7 +60,7 @@ router.get("/getlist/", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await UsersModel.find()
+  await UsersModel.find({ roleId: 3 })
     .then((result) => {
       res.status(200).json({
         success: true,
