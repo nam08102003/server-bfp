@@ -53,7 +53,7 @@ router.get("/getlist/", async (req, res) => {
             delete dataUser["password"];
             return {
               key: "" + item._id,
-              dataUser,
+              ...dataUser,
             };
           }),
         });
@@ -79,7 +79,7 @@ router.get("/getall", async (req, res) => {
           delete dataUser["password"];
           return {
             key: "" + item._id,
-            dataUser,
+            ...dataUser,
           };
         }),
       });
