@@ -43,9 +43,12 @@ router.get("/getlist/", async (req, res) => {
             length: result.length,
           },
           result: result.map((item) => {
+            const { password, ...others } = item;
+            const dataUser = others._doc;
+            delete dataUser["password"];
             return {
               key: "" + item._id,
-              ...item._doc,
+              dataUser,
             };
           }),
         });
@@ -66,9 +69,12 @@ router.get("/getall", async (req, res) => {
         success: true,
         message: "Thành công",
         result: result.map((item) => {
+          const { password, ...others } = item;
+          const dataUser = others._doc;
+          delete dataUser["password"];
           return {
             key: "" + item._id,
-            ...item_doc,
+            dataUser,
           };
         }),
       });

@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const bcryptjs = require("bcryptjs");
 const UsersModel = require("../models/Users.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 
@@ -9,7 +10,11 @@ router.post("/addone", async (req, res) => {
       success: "Thêm tài khoản thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await UsersModel.create({ ...data, roleId: 3 })
+    const { password } = data;
+    const salt = bcryptjs.genSaltSync(10);
+    const hashPassword = bcryptjs.hashSync(password, salt);
+
+    await UsersModel.create({ ...data, password: hashPassword, roleId: 3 })
       .then(() => {
         res.status(200).json({
           success: true,
@@ -43,9 +48,12 @@ router.get("/getlist/", async (req, res) => {
             length: result.length,
           },
           result: result.map((item) => {
+            const { password, ...others } = item;
+            const dataUser = others._doc;
+            delete dataUser["password"];
             return {
               key: "" + item._id,
-              ...item._doc,
+              dataUser,
             };
           }),
         });
@@ -66,9 +74,12 @@ router.get("/getall", async (req, res) => {
         success: true,
         message: "Thành công",
         result: result.map((item) => {
+          const { password, ...others } = item;
+          const dataUser = others._doc;
+          delete dataUser["password"];
           return {
             key: "" + item._id,
-            ...item_doc,
+            dataUser,
           };
         }),
       });
