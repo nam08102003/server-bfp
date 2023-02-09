@@ -63,7 +63,7 @@ router.get("/getlist/", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await UsersModel.find()
+  await UsersModel.find({ roleId: 1 })
     .then((result) => {
       res.status(200).json({
         success: true,
