@@ -12,23 +12,33 @@ router.post("/addone", async (req, res) => {
       success: "Thêm tài khoản thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    const { password } = data;
-    const salt = bcryptjs.genSaltSync(10);
-    const hashPassword = bcryptjs.hashSync(password, salt);
 
-    await UsersModel.create({ ...data, password: hashPassword, roleId: 2 })
-      .then(() => {
-        res.status(200).json({
-          success: true,
-          message: message.success,
-        });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: message.fail,
-        });
+    const { password } = data;
+    const userDB = UsersModel.find(data?.username);
+    if (userDB) {
+      message.fail = "Tài khoản đã tồn tại";
+      res.status(500).json({
+        success: false,
+        message: message.fail,
       });
+    } else {
+      const salt = bcryptjs.genSaltSync(10);
+      const hashPassword = bcryptjs.hashSync(password, salt);
+
+      await UsersModel.create({ ...data, password: hashPassword, roleId: 2 })
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: message.success,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
+          });
+        });
+    }
   } catch (err) {
     if (err) throw err;
   }
