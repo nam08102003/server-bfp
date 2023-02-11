@@ -1,3 +1,5 @@
+/** @format */
+
 const mongoose = require("mongoose");
 
 const Users = new mongoose.Schema(
@@ -52,6 +54,12 @@ const Users = new mongoose.Schema(
     accoutsPaypal: {
       type: Array,
       default: [],
+    },
+    ciId: {
+      type: String,
+    },
+    position: {
+      type: String,
     },
     accessToken: {
       type: String,
