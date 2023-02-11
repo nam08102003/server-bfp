@@ -1,3 +1,5 @@
+/** @format */
+
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
 const UsersModel = require("../models/Users.js");
@@ -21,7 +23,7 @@ router.post("/addone", async (req, res) => {
           message: message.success,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500).json({
           success: false,
           message: message.fail,
