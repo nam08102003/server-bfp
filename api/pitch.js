@@ -42,10 +42,7 @@ router.post("/addone", async (req, res) => {
         }
       }
       const dataCreate = { listPitchs, ...others };
-      await PitchsModel.create({
-        ...dataCreate,
-        image: data?.thumbnail[0]?.thumbUrl,
-      })
+      await PitchsModel.create(dataCreate)
         .then(() => {
           res.status(200).json({
             success: true,
