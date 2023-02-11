@@ -1,3 +1,5 @@
+/** @format */
+
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
@@ -40,7 +42,10 @@ router.post("/addone", async (req, res) => {
         }
       }
       const dataCreate = { listPitchs, ...others };
-      await PitchsModel.create(dataCreate)
+      await PitchsModel.create({
+        ...dataCreate,
+        image: data?.thumbnail[0]?.thumbUrl,
+      })
         .then(() => {
           res.status(200).json({
             success: true,

@@ -1,3 +1,5 @@
+/** @format */
+
 try {
   const express = require("express");
   const compression = require("compression");
@@ -11,7 +13,7 @@ try {
   require("dotenv").config();
   const port = process.env.PORT || 3000;
 
-  server.use(express.json());
+  server.use(express.json({ limit: "50mb" }));
   server.use(cors({ origin: true }));
   server.use(express.urlencoded({ extended: true }));
 
@@ -19,8 +21,8 @@ try {
 
   server.use("/static", express.static(path.join(__dirname, "public")));
 
-  server.use(cookieParser());
-  server.use(bodyParser.json());
+  server.use(cookieParser({ limit: "50mb" }));
+  server.use(bodyParser.json({ limit: "50mb" }));
   server.use(
     bodyParser.urlencoded({
       extended: true,
