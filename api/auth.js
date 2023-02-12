@@ -1,3 +1,5 @@
+/** @format */
+
 const router = require("express").Router();
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -103,6 +105,7 @@ router.post("/login", async (req, res) => {
                 {
                   $set: {
                     accessToken,
+                    statusActive: true,
                   },
                 },
                 (err) => {
@@ -172,6 +175,39 @@ router.post("/login", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+router.get("/logout", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (id) {
+      await UsersModel.findByIdAndUpdate(id, { statusActive: false })
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+          });
+        })
+        .catch((err) => {
+          res.status(499).json({
+            success: false,
+            message: "Thất bại",
+            errors: err,
+          });
+        });
+    } else {
+      res.status(499).json({
+        success: false,
+        message: "Thất bại.Không có id",
+      });
+    }
+  } catch (err) {
+    res.status(499).json({
+      success: false,
+      message: "Thất bại",
+      errors: err,
+    });
   }
 });
 
