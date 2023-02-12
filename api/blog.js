@@ -101,7 +101,7 @@ router.get("/getone/", async (req, res) => {
             success: true,
             message: "Thành công",
             result: {
-              ...result,
+              ...result._doc,
               key: result._id,
             },
           });
