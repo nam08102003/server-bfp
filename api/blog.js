@@ -182,4 +182,32 @@ router.delete("/deleteone/", async (req, res) => {
   }
 });
 
+router.put("/increaseviews", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (id) {
+      await BlogsModel.findByIdAndUpdate(id, { $inc: { countRead: 1 } })
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: "Thất bại",
+            errors: err,
+          });
+        });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Thất bại",
+      errors: err,
+    });
+  }
+});
+
 module.exports = router;
