@@ -68,6 +68,10 @@ const Pitchs = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    slideShow: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
