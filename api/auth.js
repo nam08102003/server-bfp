@@ -178,7 +178,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/logout", async (req, res) => {
+router.post("/logout", async (req, res) => {
   try {
     const { id } = req.body;
     if (id) {
