@@ -13,7 +13,7 @@ try {
   require("dotenv").config();
   const port = process.env.PORT || 3000;
 
-  server.use(express.json({ limit: "50mb" }));
+  server.use(express.json({ limit: "100mb" }));
   server.use(cors({ origin: true }));
   server.use(express.urlencoded({ extended: true }));
 
@@ -21,8 +21,8 @@ try {
 
   server.use("/static", express.static(path.join(__dirname, "public")));
 
-  server.use(cookieParser({ limit: "50mb" }));
-  server.use(bodyParser.json({ limit: "50mb" }));
+  server.use(cookieParser({ limit: "100mb" }));
+  server.use(bodyParser.json({ limit: "100mb" }));
   server.use(
     bodyParser.urlencoded({
       extended: true,
