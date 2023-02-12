@@ -1,3 +1,5 @@
+/** @format */
+
 const mongoose = require("mongoose");
 
 const Pitchs = new mongoose.Schema(
@@ -59,8 +61,8 @@ const Pitchs = new mongoose.Schema(
       default: "",
     },
     image: {
-      type: Array,
-      default: [],
+      type: String,
+      default: "",
     },
     isActive: {
       type: Boolean,
