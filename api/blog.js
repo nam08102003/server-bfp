@@ -12,7 +12,10 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (data) {
-      await BlogsModel.create(data)
+      await BlogsModel.create({
+        ...data,
+        image: data?.thumbnail[0].thumbUrl,
+      })
         .then(() => {
           res.status(200).json({
             success: true,
