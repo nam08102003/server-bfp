@@ -3,6 +3,7 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
+const getMinMax = require("../services/getMinMax.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -41,6 +42,7 @@ router.post("/addone", async (req, res) => {
           // listIdPitch.push(idPitch);
         }
       }
+
       const dataCreate = { listPitchs, ...others };
       await PitchsModel.create(dataCreate)
         .then(() => {
@@ -65,34 +67,43 @@ router.post("/addone", async (req, res) => {
 
 router.get("/getall", async (req, res) => {
   await PitchsModel.find()
-    .then((result) => {
+    .then(async (result) => {
+      const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
       res.status(200).json({
         success: true,
         message: "Thành công",
         result: result.map((item) => {
-          return {
-            key: "" + item._id,
-            ...item._doc,
-          };
+          return minMaxPrice.map((minMaxItem) => {
+            if (item._id.equals(minMaxItem._id)) {
+              return {
+                key: "" + item._id,
+                ...item._doc,
+                minPrice: minMaxItem.minPrice,
+                maxPrice: minMaxItem.maxPrice,
+              };
+            }
+          });
         }),
       });
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).json({
         success: false,
         message: "Có lỗi. Vui lòng thử lại",
+        errors: err,
       });
     });
 });
 
 router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
-  const perPage = 8;
+  const perPage = 2;
   if (page) {
     await PitchsModel.find()
       .limit(perPage)
       .skip(perPage * (page - 1))
-      .then((result) => {
+      .then(async (result) => {
+        const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -101,17 +112,28 @@ router.get("/getlist/", async (req, res) => {
             length: result.length,
           },
           result: result.map((item) => {
-            return {
-              key: "" + item._id,
-              ...item._doc,
-            };
+            const arrayResponse = [];
+            minMaxPrice.forEach((dataCurrent) => {
+              if (item._id.equals(dataCurrent._id)) {
+                const data = {
+                  key: "" + item._id,
+                  ...item._doc,
+                  minPrice: dataCurrent.minPrice,
+                  maxPrice: dataCurrent.maxPrice,
+                };
+                arrayResponse.push(data);
+              }
+            });
+            return arrayResponse;
           }),
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         res.status(500).json({
           success: false,
           message: "Có lỗi. Vui lòng thử lại",
+          errors: err,
         });
       });
   }
