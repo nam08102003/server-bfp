@@ -73,16 +73,19 @@ router.get("/getall", async (req, res) => {
         success: true,
         message: "Thành công",
         result: result.map((item) => {
-          return minMaxPrice.map((minMaxItem) => {
-            if (item._id.equals(minMaxItem._id)) {
-              return {
+          const arrayResponse = [];
+          minMaxPrice.forEach((dataCurrent) => {
+            if (item._id.equals(dataCurrent._id)) {
+              const data = {
                 key: "" + item._id,
                 ...item._doc,
-                minPrice: minMaxItem.minPrice,
-                maxPrice: minMaxItem.maxPrice,
+                minPrice: dataCurrent.minPrice,
+                maxPrice: dataCurrent.maxPrice,
               };
+              arrayResponse.push(data);
             }
           });
+          return arrayResponse;
         }),
       });
     })
@@ -97,7 +100,7 @@ router.get("/getall", async (req, res) => {
 
 router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
-  const perPage = 2;
+  const perPage = 8;
   if (page) {
     await PitchsModel.find()
       .limit(perPage)
