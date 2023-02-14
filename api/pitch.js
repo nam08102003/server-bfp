@@ -69,25 +69,25 @@ router.get("/getall", async (req, res) => {
   await PitchsModel.find()
     .then(async (result) => {
       const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
-      res.status(200).json({
-        success: true,
-        message: "Thành công",
-        result: result.map((item) => {
-          const arrayResponse = [];
-          minMaxPrice.forEach((dataCurrent) => {
-            if (item._id.equals(dataCurrent._id)) {
-              const data = {
-                key: "" + item._id,
-                ...item._doc,
-                minPrice: dataCurrent.minPrice,
-                maxPrice: dataCurrent.maxPrice,
-              };
-              arrayResponse.push(data);
-            }
-          });
-          return arrayResponse;
-        }),
-      });
+      const arrayResponse = [];
+      result.forEach((item) => {
+        minMaxPrice.forEach((dataCurrent) => {
+          if (item._id.equals(dataCurrent._id)) {
+            const data = {
+              key: "" + item._id,
+              ...item._doc,
+              minPrice: dataCurrent.minPrice,
+              maxPrice: dataCurrent.maxPrice,
+            };
+            arrayResponse.push(data);
+          }
+        });
+      }),
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          result: arrayResponse,
+        });
     })
     .catch((err) => {
       res.status(500).json({
@@ -107,29 +107,29 @@ router.get("/getlist/", async (req, res) => {
       .skip(perPage * (page - 1))
       .then(async (result) => {
         const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
-        res.status(200).json({
-          success: true,
-          message: "Thành công",
-          pagination: {
-            currentPage: page,
-            length: result.length,
-          },
-          result: result.map((item) => {
-            const arrayResponse = [];
-            minMaxPrice.forEach((dataCurrent) => {
-              if (item._id.equals(dataCurrent._id)) {
-                const data = {
-                  key: "" + item._id,
-                  ...item._doc,
-                  minPrice: dataCurrent.minPrice,
-                  maxPrice: dataCurrent.maxPrice,
-                };
-                arrayResponse.push(data);
-              }
-            });
-            return arrayResponse;
-          }),
-        });
+        const arrayResponse = [];
+        result.map((item) => {
+          minMaxPrice.forEach((dataCurrent) => {
+            if (item._id.equals(dataCurrent._id)) {
+              const data = {
+                key: "" + item._id,
+                ...item._doc,
+                minPrice: dataCurrent.minPrice,
+                maxPrice: dataCurrent.maxPrice,
+              };
+              arrayResponse.push(data);
+            }
+          });
+        }),
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            pagination: {
+              currentPage: page,
+              length: result.length,
+            },
+            result: arrayResponse,
+          });
       })
       .catch((err) => {
         console.log(err);
