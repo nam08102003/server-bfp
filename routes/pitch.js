@@ -67,8 +67,8 @@ router.post("/addone", async (req, res) => {
 router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
-      .then(async (result) => {
-        await PitchsModel.aggregate([
+      .then((result) => {
+        PitchsModel.aggregate([
           {
             $project: {
               minPrice: {
@@ -198,7 +198,7 @@ router.get("/getlist/", async (req, res) => {
           message: "Thành công",
           pagination: {
             currentPage: page,
-            length: result.length,
+            length: result?.length,
           },
           result: arrayResponse,
         });
