@@ -54,5 +54,8 @@ try {
     console.log(`Example app listening on port ${port}`);
   });
 } catch (err) {
-  console.log(err);
+  res.status(500).json({
+    errors: err,
+    success: false,
+  });
 }
