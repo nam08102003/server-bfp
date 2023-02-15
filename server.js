@@ -33,18 +33,18 @@ try {
   connectDB(process.env.DATABASE_URL);
 
   // Route api
-  server.use("/v1/auth", require("./api/auth.js")),
-    server.use("/v2/auth", require("./api/admin.js")),
-    server.use("/api/users", require("./api/user.js")),
-    server.use("/api/employees", require("./api/employee.js")),
-    server.use("/api/owners", require("./api/owner.js")),
-    server.use("/api/blogs", require("./api/blog.js")),
-    server.use("/api/pitchs", require("./api/pitch.js")),
-    server.use("/api/cities", require("./api/city.js")),
-    server.use("/api/districts", require("./api/district.js")),
-    server.use("/api/wards", require("./api/ward.js")),
-    server.use("/api/saleOff", require("./api/saleOff.js")),
-    server.use("/api/booking", require("./api/booking.js"));
+  server.use("/v1/auth", require("./routes/auth.js")),
+    server.use("/v2/auth", require("./routes/admin.js")),
+    server.use("/api/users", require("./routes/user.js")),
+    server.use("/api/employees", require("./routes/employee.js")),
+    server.use("/api/owners", require("./routes/owner.js")),
+    server.use("/api/blogs", require("./routes/blog.js")),
+    server.use("/api/pitchs", require("./routes/pitch.js")),
+    server.use("/api/cities", require("./routes/city.js")),
+    server.use("/api/districts", require("./routes/district.js")),
+    server.use("/api/wards", require("./routes/ward.js")),
+    server.use("/api/saleOff", require("./routes/saleOff.js")),
+    server.use("/api/booking", require("./routes/booking.js"));
 
   server.use("/", (req, res) => {
     res.status(200).json("Server");
