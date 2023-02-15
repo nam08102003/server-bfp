@@ -3,7 +3,7 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const getMinMax = require("../services/getMinMax.js");
+// const getMinMax = require("../services/getMinMax.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -69,6 +69,7 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
+        const getMinMax = require("../services/getMinMax.js");
         getMinMax()
           .then((minMaxPrice) => {
             console.log(minMaxPrice);
