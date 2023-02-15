@@ -68,8 +68,8 @@ router.post("/addone", async (req, res) => {
 router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
-      .then(async (result) => {
-        const minMaxPrice = await getMinMax();
+      .then((result) => {
+        const minMaxPrice = getMinMax();
         const arrayResponse = [];
         result.forEach((item) => {
           minMaxPrice.forEach((dataCurrent) => {
