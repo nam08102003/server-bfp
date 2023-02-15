@@ -135,8 +135,63 @@ router.post("/addone", async (req, res) => {
 router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
-      .then((result) => {
-        getMinMax()
+      .then(async (result) => {
+        await PitchsModel.aggregate([
+          {
+            $project: {
+              minPrice: {
+                $min: {
+                  $reduce: {
+                    input: {
+                      $map: {
+                        input: "$listPitchs",
+                        as: "listPitch",
+                        in: {
+                          $map: {
+                            input: "$$listPitch.infoPitchs",
+                            as: "infoPitch",
+                            in: {
+                              $toInt: "$$infoPitch.price",
+                            },
+                          },
+                        },
+                      },
+                    },
+                    initialValue: [],
+                    in: {
+                      $concatArrays: ["$$value", "$$this"],
+                    },
+                  },
+                },
+              },
+              maxPrice: {
+                $max: {
+                  $reduce: {
+                    input: {
+                      $map: {
+                        input: "$listPitchs",
+                        as: "listPitch",
+                        in: {
+                          $map: {
+                            input: "$$listPitch.infoPitchs",
+                            as: "infoPitch",
+                            in: {
+                              $toInt: "$$infoPitch.price",
+                            },
+                          },
+                        },
+                      },
+                    },
+                    initialValue: [],
+                    in: {
+                      $concatArrays: ["$$value", "$$this"],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ])
           .then((minMaxPrice) => {
             console.log(minMaxPrice);
             const arrayResponse = [];
