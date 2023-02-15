@@ -130,13 +130,15 @@ router.get("/getall", async (req, res) => {
             result?.forEach((item) => {
               minMaxPrice?.forEach((dataCurrent) => {
                 if (item?._id.equals(dataCurrent?._id)) {
-                  const data = {
-                    key: "" + item?._id,
-                    ...item?._doc,
-                    minPrice: dataCurrent?.minPrice,
-                    maxPrice: dataCurrent?.maxPrice,
-                  };
-                  arrayResponse.unshift(data);
+                  // const data = {
+                  //   key: "" + item?._id,
+                  //   ...item?._doc,
+                  //   minPrice: dataCurrent?.minPrice,
+                  //   maxPrice: dataCurrent?.maxPrice,
+                  // };
+                  const newObject = Object.assign({}, item, dataCurrent);
+                  console.log(newObject);
+                  arrayResponse.unshift([]);
                 }
               });
             }),
