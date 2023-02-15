@@ -126,7 +126,7 @@ router.get("/getall", async (req, res) => {
         ])
           .then((minMaxPrice) => {
             console.log(minMaxPrice);
-            const arrayResponse = [];
+            let arrayResponse = [];
             result?.forEach((item) => {
               minMaxPrice?.forEach((dataCurrent) => {
                 if (item?._id.equals(dataCurrent?._id)) {
@@ -136,7 +136,7 @@ router.get("/getall", async (req, res) => {
                     minPrice: dataCurrent?.minPrice,
                     maxPrice: dataCurrent?.maxPrice,
                   };
-                  // arrayResponse.push(data);
+                  arrayResponse.push(data);
                 }
               });
             }),
