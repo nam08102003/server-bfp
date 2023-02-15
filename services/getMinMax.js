@@ -70,4 +70,4 @@ const getMinMax = async () => {
   return data;
 };
 
-module.exports = getMinMax;
+module.exports = { getMinMax };

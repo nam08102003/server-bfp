@@ -3,7 +3,7 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const getMinMax = require("../services/getMinMax.js");
+const { getMinMax } = require("../services/getMinMax.js");
 
 router.post("/addone", async (req, res) => {
   try {
