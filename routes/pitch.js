@@ -70,7 +70,7 @@ router.get("/getall", async (req, res) => {
       .then((result) => {
         PitchsModel.aggregate([
           {
-            $project: {
+            $addFields: {
               minPrice: {
                 $min: {
                   $reduce: {
