@@ -2,7 +2,7 @@
 
 const PitchsModel = require("../models/Pitchs.js");
 
-const getMinMax = async () => {
+module.exports = async () => {
   let data = [];
   await PitchsModel.aggregate([
     {
@@ -69,5 +69,3 @@ const getMinMax = async () => {
 
   return data;
 };
-
-module.exports = { getMinMax };
