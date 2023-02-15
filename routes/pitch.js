@@ -3,7 +3,7 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const getMinMax = require("../services/getMinMax.js");
+// const getMinMax = require("../services/getMinMax.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -69,26 +69,26 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then(async (result) => {
-        const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
+        // const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
         const arrayResponse = [];
-        result.forEach((item) => {
-          minMaxPrice.forEach((dataCurrent) => {
-            if (item._id.equals(dataCurrent._id)) {
-              const data = {
-                key: "" + item._id,
-                ...item._doc,
-                minPrice: dataCurrent.minPrice,
-                maxPrice: dataCurrent.maxPrice,
-              };
-              arrayResponse.push(data);
-            }
-          });
-        }),
-          res.status(200).json({
-            success: true,
-            message: "Thành công",
-            result: arrayResponse,
-          });
+        // result.forEach((item) => {
+        //   minMaxPrice.forEach((dataCurrent) => {
+        //     if (item._id.equals(dataCurrent._id)) {
+        //       const data = {
+        //         key: "" + item._id,
+        //         ...item._doc,
+        //         minPrice: dataCurrent.minPrice,
+        //         maxPrice: dataCurrent.maxPrice,
+        //       };
+        //       arrayResponse.push(data);
+        //     }
+        //   });
+        // }),
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          result: arrayResponse,
+        });
       })
       .catch((err) => {
         res.status(500).json({
@@ -114,30 +114,30 @@ router.get("/getlist/", async (req, res) => {
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then(async (result) => {
-        const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
+        // const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
         const arrayResponse = [];
-        result.map((item) => {
-          minMaxPrice.forEach((dataCurrent) => {
-            if (item._id.equals(dataCurrent._id)) {
-              const data = {
-                key: "" + item._id,
-                ...item._doc,
-                minPrice: dataCurrent.minPrice,
-                maxPrice: dataCurrent.maxPrice,
-              };
-              arrayResponse.push(data);
-            }
-          });
-        }),
-          res.status(200).json({
-            success: true,
-            message: "Thành công",
-            pagination: {
-              currentPage: page,
-              length: result.length,
-            },
-            result: arrayResponse,
-          });
+        // result.map((item) => {
+        //   minMaxPrice.forEach((dataCurrent) => {
+        //     if (item._id.equals(dataCurrent._id)) {
+        //       const data = {
+        //         key: "" + item._id,
+        //         ...item._doc,
+        //         minPrice: dataCurrent.minPrice,
+        //         maxPrice: dataCurrent.maxPrice,
+        //       };
+        //       arrayResponse.push(data);
+        //     }
+        //   });
+        // }),
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          pagination: {
+            currentPage: page,
+            length: result.length,
+          },
+          result: arrayResponse,
+        });
       })
       .catch((err) => {
         console.log(err);
