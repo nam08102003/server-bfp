@@ -136,7 +136,7 @@ router.get("/getall", async (req, res) => {
                     minPrice: dataCurrent?.minPrice,
                     maxPrice: dataCurrent?.maxPrice,
                   };
-                  arrayResponse.push(data);
+                  arrayResponse.unshift(data);
                 }
               });
             }),
