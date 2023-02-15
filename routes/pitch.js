@@ -138,7 +138,7 @@ router.get("/getall", async (req, res) => {
                   // };
                   const newObject = Object.assign({}, item, dataCurrent);
                   console.log(newObject);
-                  arrayResponse.unshift([]);
+                  arrayResponse.unshift(newObject);
                 }
               });
             }),
