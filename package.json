@@ -1,12 +1,6 @@
 {
   "name": "booking-football-pitch",
   "version": "1.0.0",
-  "builds": [
-    {
-      "src": "package.json", 
-      "use": "vercel-sapper"
-    }
-  ],
   "main": "index.js",
   "engines": {
     "node": "18.x"
