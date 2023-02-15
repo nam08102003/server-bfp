@@ -2,12 +2,7 @@
   "name": "booking-football-pitch",
   "version": "1.0.0",
   "main": "index.js",
-  "builds": [
-    {
-        "src": "package.json",
-        "use": "@frontity/now"
-    }
-],
+  
   "engines": {
     "node": "18.x"
   },
