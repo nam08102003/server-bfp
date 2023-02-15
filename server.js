@@ -25,6 +25,7 @@ try {
   server.use(bodyParser.json({ limit: "100mb" }));
   server.use(
     bodyParser.urlencoded({
+      limit: "100mb",
       extended: true,
     })
   );
