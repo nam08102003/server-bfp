@@ -66,36 +66,44 @@ router.post("/addone", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await PitchsModel.find()
-    .then(async (result) => {
-      const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
-      const arrayResponse = [];
-      result.forEach((item) => {
-        minMaxPrice.forEach((dataCurrent) => {
-          if (item._id.equals(dataCurrent._id)) {
-            const data = {
-              key: "" + item._id,
-              ...item._doc,
-              minPrice: dataCurrent.minPrice,
-              maxPrice: dataCurrent.maxPrice,
-            };
-            arrayResponse.push(data);
-          }
+  try {
+    await PitchsModel.find()
+      .then(async (result) => {
+        const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
+        const arrayResponse = [];
+        result.forEach((item) => {
+          minMaxPrice.forEach((dataCurrent) => {
+            if (item._id.equals(dataCurrent._id)) {
+              const data = {
+                key: "" + item._id,
+                ...item._doc,
+                minPrice: dataCurrent.minPrice,
+                maxPrice: dataCurrent.maxPrice,
+              };
+              arrayResponse.push(data);
+            }
+          });
+        }),
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            result: arrayResponse,
+          });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "Có lỗi. Vui lòng thử lại",
+          errors: err,
         });
-      }),
-        res.status(200).json({
-          success: true,
-          message: "Thành công",
-          result: arrayResponse,
-        });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        success: false,
-        message: "Có lỗi. Vui lòng thử lại",
-        errors: err,
       });
+  } catch (err) {
+    res.status(500).json({
+      errors: err,
+      success: false,
+      message: "Có lỗi. Vui lòng thử lại",
     });
+  }
 });
 
 router.get("/getlist/", async (req, res) => {
