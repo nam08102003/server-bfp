@@ -71,14 +71,14 @@ router.get("/getall", async (req, res) => {
       .then((result) => {
         const minMaxPrice = getMinMax();
         const arrayResponse = [];
-        result.forEach((item) => {
-          minMaxPrice.forEach((dataCurrent) => {
-            if (item._id.equals(dataCurrent._id)) {
+        result?.forEach((item) => {
+          minMaxPrice?.forEach((dataCurrent) => {
+            if (item?._id.equals(dataCurrent?._id)) {
               const data = {
-                key: "" + item._id,
-                ...item._doc,
-                minPrice: dataCurrent.minPrice,
-                maxPrice: dataCurrent.maxPrice,
+                key: "" + item?._id,
+                ...item?._doc,
+                minPrice: dataCurrent?.minPrice,
+                maxPrice: dataCurrent?.maxPrice,
               };
               arrayResponse.push(data);
             }
