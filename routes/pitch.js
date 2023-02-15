@@ -69,25 +69,35 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
-        const minMaxPrice = getMinMax();
-        const arrayResponse = [];
-        result?.forEach((item) => {
-          minMaxPrice?.forEach((dataCurrent) => {
-            if (item?._id.equals(dataCurrent?._id)) {
-              const data = {
-                key: "" + item?._id,
-                ...item?._doc,
-                minPrice: dataCurrent?.minPrice,
-                maxPrice: dataCurrent?.maxPrice,
-              };
-              arrayResponse.push(data);
-            }
-          });
-        }),
-          res.status(200).json({
-            success: true,
-            message: "Thành công",
-            result: arrayResponse,
+        getMinMax()
+          .then((minMaxPrice) => {
+            console.log(minMaxPrice);
+            const arrayResponse = [];
+            result?.forEach((item) => {
+              minMaxPrice?.forEach((dataCurrent) => {
+                if (item?._id.equals(dataCurrent?._id)) {
+                  const data = {
+                    key: "" + item?._id,
+                    ...item?._doc,
+                    minPrice: dataCurrent?.minPrice,
+                    maxPrice: dataCurrent?.maxPrice,
+                  };
+                  arrayResponse.push(data);
+                }
+              });
+            }),
+              res.status(200).json({
+                success: true,
+                message: "Thành công",
+                result: arrayResponse,
+              });
+          })
+          .catch((err) => {
+            res.status(500).json({
+              success: false,
+              message: "Có lỗi. Vui lòng thử lại",
+              errors: err,
+            });
           });
       })
       .catch((err) => {
