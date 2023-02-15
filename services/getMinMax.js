@@ -70,4 +70,4 @@ const getMinMaxPricePitchs = async () => {
   return data;
 };
 
-module.exports = { getMinMaxPricePitchs };
+module.exports = getMinMaxPricePitchs;
