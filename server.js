@@ -26,6 +26,7 @@ try {
   server.use(
     bodyParser.urlencoded({
       limit: "100mb",
+      parameterLimit: 10000000,
       extended: true,
     })
   );
