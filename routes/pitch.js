@@ -72,6 +72,21 @@ router.get("/getlist/", async (req, res) => {
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then((result) => {
+        const minMaxPrice = [];
+        for (let i = 0; i < result.length; i++) {
+          const arrayPrice = [];
+          for (let j = 0; j < result[i]?.listPitchs.length; j++) {
+            let listPitch = result[i]?.listPitchs[j];
+            for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
+              const price = Number(listPitch?.infoPitchs[x]?.price);
+              arrayPrice.push(price);
+            }
+          }
+          minMaxPrice.push({
+            minPrice: Number(Math.min(...arrayPrice)),
+            maxPrice: Number(Math.max(...arrayPrice)),
+          });
+        }
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -79,10 +94,11 @@ router.get("/getlist/", async (req, res) => {
             currentPage: page,
             length: result?.length,
           },
-          result: result.map((item) => {
+          result: result.map((item, index) => {
             return {
               key: "" + item._id,
               ...item._doc,
+              ...minMaxPrice[index],
             };
           }),
         });
