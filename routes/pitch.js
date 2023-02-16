@@ -90,7 +90,7 @@ router.get("/getall", async (req, res) => {
             return {
               key: "" + item?._id,
               ...item?._doc,
-              ...minMaxPrice[index],
+              // ...minMaxPrice[index],
             };
           }),
         });
