@@ -96,8 +96,8 @@ router.get("/getlist/", async (req, res) => {
           },
           result: result.map((item, index) => {
             return {
-              key: "" + item._id,
-              ...item._doc,
+              key: "" + item?._id,
+              ...item?._doc,
               ...minMaxPrice[index],
             };
           }),
