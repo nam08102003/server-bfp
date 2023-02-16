@@ -64,6 +64,40 @@ router.post("/addone", async (req, res) => {
   }
 });
 
+router.get("/getlist/", async (req, res) => {
+  const { page } = req.query;
+  const perPage = 8;
+  if (page) {
+    await PitchsModel.find()
+      .limit(perPage)
+      .skip(perPage * (page - 1))
+      .then((result) => {
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          pagination: {
+            currentPage: page,
+            length: result?.length,
+          },
+          result: result.map((item) => {
+            return {
+              key: "" + item._id,
+              ...item._doc,
+            };
+          }),
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          success: false,
+          message: "Có lỗi. Vui lòng thử lại",
+          errors: err,
+        });
+      });
+  }
+});
+
 router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
@@ -108,55 +142,6 @@ router.get("/getall", async (req, res) => {
       success: false,
       message: "Có lỗi. Vui lòng thử lại",
     });
-  }
-});
-
-router.get("/getlist/", async (req, res) => {
-  const { page } = req.query;
-  const perPage = 8;
-  if (page) {
-    await PitchsModel.find()
-      .limit(perPage)
-      .skip(perPage * (page - 1))
-      .then((result) => {
-        // const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
-        const arrayResponse = [];
-        // result.map((item) => {
-        //   minMaxPrice.forEach((dataCurrent) => {
-        //     if (item._id.equals(dataCurrent._id)) {
-        //       const data = {
-        //         key: "" + item._id,
-        //         ...item._doc,
-        //         minPrice: dataCurrent.minPrice,
-        //         maxPrice: dataCurrent.maxPrice,
-        //       };
-        //       arrayResponse.push(data);
-        //     }
-        //   });
-        // }),
-        res.status(200).json({
-          success: true,
-          message: "Thành công",
-          pagination: {
-            currentPage: page,
-            length: result?.length,
-          },
-          result: result.map((item) => {
-            return {
-              key: "" + item._id,
-              ...item._doc,
-            };
-          }),
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          success: false,
-          message: "Có lỗi. Vui lòng thử lại",
-          errors: err,
-        });
-      });
   }
 });
 
