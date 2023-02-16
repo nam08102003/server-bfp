@@ -102,21 +102,21 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
-        // const minMaxPrice = [];
-        // for (let i = 0; i < result.length; i++) {
-        //   const arrayPrice = [];
-        //   for (let j = 0; j < result[i]?.listPitchs.length; j++) {
-        //     let listPitch = result[i]?.listPitchs[j];
-        //     for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
-        //       const price = Number(listPitch?.infoPitchs[x]?.price);
-        //       arrayPrice.push(price);
-        //     }
-        //   }
-        //   minMaxPrice.push({
-        //     minPrice: Number(Math.min(...arrayPrice)),
-        //     maxPrice: Number(Math.max(...arrayPrice)),
-        //   });
-        // }
+        const minMaxPrice = [];
+        for (let i = 0; i < result.length; i++) {
+          const arrayPrice = [];
+          for (let j = 0; j < result[i]?.listPitchs.length; j++) {
+            let listPitch = result[i]?.listPitchs[j];
+            for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
+              const price = Number(listPitch?.infoPitchs[x]?.price);
+              arrayPrice.push(price);
+            }
+          }
+          minMaxPrice.push({
+            minPrice: Number(Math.min(...arrayPrice)),
+            maxPrice: Number(Math.max(...arrayPrice)),
+          });
+        }
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -124,7 +124,7 @@ router.get("/getall", async (req, res) => {
             return {
               key: "" + item?._id,
               ...item?._doc,
-              // ...minMaxPrice[index],
+              ...minMaxPrice[index],
             };
           }),
         });
