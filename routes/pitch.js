@@ -68,93 +68,32 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
-        PitchsModel.aggregate([
-          {
-            $addFields: {
-              minPrice: {
-                $min: {
-                  $reduce: {
-                    input: {
-                      $map: {
-                        input: "$listPitchs",
-                        as: "listPitch",
-                        in: {
-                          $map: {
-                            input: "$$listPitch.infoPitchs",
-                            as: "infoPitch",
-                            in: {
-                              $toInt: "$$infoPitch.price",
-                            },
-                          },
-                        },
-                      },
-                    },
-                    initialValue: [],
-                    in: {
-                      $concatArrays: ["$$value", "$$this"],
-                    },
-                  },
-                },
-              },
-              maxPrice: {
-                $max: {
-                  $reduce: {
-                    input: {
-                      $map: {
-                        input: "$listPitchs",
-                        as: "listPitch",
-                        in: {
-                          $map: {
-                            input: "$$listPitch.infoPitchs",
-                            as: "infoPitch",
-                            in: {
-                              $toInt: "$$infoPitch.price",
-                            },
-                          },
-                        },
-                      },
-                    },
-                    initialValue: [],
-                    in: {
-                      $concatArrays: ["$$value", "$$this"],
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ])
-          .then((minMaxPrice) => {
-            console.log(minMaxPrice);
-            // let arrayResponse = [];
-            // result?.forEach((item) => {
-            //   minMaxPrice?.forEach((dataCurrent) => {
-            //     if (item?._id.equals(dataCurrent?._id)) {
-            //       const data = {
-            //         key: "" + item?._id,
-            //         ...item?._doc,
-            //         minPrice: dataCurrent?.minPrice,
-            //         maxPrice: dataCurrent?.maxPrice,
-            //       };
-            //       // const newObject = Object.assign({}, item, dataCurrent);
-            //       // console.log(newObject);
-            //       arrayResponse.push(data);
-            //     }
-            //   });
-            // }),
-            res.status(200).json({
-              success: true,
-              message: "Thành công",
-              result: minMaxPrice,
-            });
-          })
-          .catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: "Có lỗi. Vui lòng thử lại",
-              errors: err,
-            });
+        const minMaxPrice = [];
+        for (let i = 0; i < result.length; i++) {
+          const arrayPrice = [];
+          for (let j = 0; j < result[i]?.listPitchs.length; j++) {
+            let listPitch = result[i]?.listPitchs[j];
+            for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
+              const price = Number(listPitch?.infoPitchs[x]?.price);
+              arrayPrice.push(price);
+            }
+          }
+          minMaxPrice.push({
+            minPrice: Number(Math.min(...arrayPrice)),
+            maxPrice: Number(Math.max(...arrayPrice)),
           });
+        }
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          result: result.map((item, index) => {
+            return {
+              key: "" + item?._id,
+              ...item?._doc,
+              ...minMaxPrice[index],
+            };
+          }),
+        });
       })
       .catch((err) => {
         res.status(500).json({
