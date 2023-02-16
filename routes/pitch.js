@@ -118,7 +118,7 @@ router.get("/getlist/", async (req, res) => {
     await PitchsModel.find()
       .limit(perPage)
       .skip(perPage * (page - 1))
-      .then(async (result) => {
+      .then((result) => {
         // const minMaxPrice = await getMinMax.getMinMaxPricePitchs();
         const arrayResponse = [];
         // result.map((item) => {
@@ -141,7 +141,12 @@ router.get("/getlist/", async (req, res) => {
             currentPage: page,
             length: result?.length,
           },
-          result: arrayResponse,
+          result: result.map((item) => {
+            return {
+              key: "" + item._id,
+              ...item._doc,
+            };
+          }),
         });
       })
       .catch((err) => {
