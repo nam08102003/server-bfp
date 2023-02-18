@@ -310,9 +310,7 @@ router.post("/find-empty-pitchs", async (req, res) => {
                   continue;
                 }
                 arrayResponse.push(
-                  new Date(timeLoopCurrent).toLocaleTimeString("en-Us", {
-                    timeZone: "Asia/Jakarta",
-                  })
+                  new Date(timeLoopCurrent).toTimeString().slice(0, 5)
                 );
               }
             }
