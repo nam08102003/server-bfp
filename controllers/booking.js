@@ -1,36 +1,66 @@
 /** @format */
 
 const router = require("express").Router();
-const BlogsModel = require("../models/Blogs.js");
+const ObjectId = require("mongodb").ObjectId;
+const BookingModel = require("../models/Booking.js");
+const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 
 router.post("/addone", async (req, res) => {
   try {
     const data = req.body;
     const message = {
-      success: "Thêm tin tức thành công.",
+      success: "Thêm thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    if (data) {
-      await BlogsModel.create(data)
-        .then(() => {
-          res.status(200).json({
-            success: true,
-            message: message.success,
+    const timeEnd =
+      new Date("2023-02-18T" + data?.timeStart).getTime() +
+      Number(data?.duration) * 60 * 1000;
+
+    const timeEndConvert = new Date(timeEnd).toTimeString().slice(0, 5);
+    console.log(timeEndConvert);
+    const dataUpdatePitch = {
+      hour: [data?.timeStart, timeEndConvert],
+      day: data?.day,
+    };
+    await PitchsModel.findByIdAndUpdate(
+      data?.keyMainPitch,
+      {
+        $addToSet: {
+          "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
+        },
+      },
+      {
+        arrayFilters: [
+          { "x.id": data?.idParentPitch },
+          { "y.id": data?.idChildPitch },
+        ],
+        new: true,
+      }
+    )
+      .then(() => {
+        BookingModel.create({ ...data, timeEnd: timeEndConvert })
+          .then(() => {
+            res.status(200).json({
+              success: true,
+              message: message.success,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+              success: false,
+              message: message.fail,
+            });
           });
-        })
-        .catch(() => {
-          res.status(500).json({
-            success: false,
-            message: message.fail,
-          });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          success: false,
+          message: message.fail,
         });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: message.fail,
       });
-    }
   } catch (err) {
     if (err) throw err;
   }
@@ -40,7 +70,7 @@ router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
   const perPage = 8;
   if (page) {
-    await BlogsModel.find()
+    await BookingModel.find()
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then((result) => {
@@ -69,7 +99,7 @@ router.get("/getlist/", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await BlogsModel.find()
+  await BookingModel.find()
     .then((result) => {
       res.status(200).json({
         success: true,
@@ -77,13 +107,12 @@ router.get("/getall", async (req, res) => {
         result: result.map((item) => {
           return {
             key: "" + item._id,
-            ...item._doc,
+            ...item_doc,
           };
         }),
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
       res.status(500).json({
         success: false,
         message: "Có lỗi. Vui lòng thử lại",
@@ -95,13 +124,13 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await BlogsModel.findById(id)
+      await BookingModel.findById(id)
         .then((result) => {
           res.status(200).json({
             success: true,
             message: "Thành công",
             result: {
-              ...result._doc,
+              ...result,
               key: result._id,
             },
           });
@@ -129,10 +158,10 @@ router.put("/updateone/", async (req, res) => {
     const { id } = req.query;
     const data = req.body;
     const message = {
-      success: "Sửa tin tức thành công.",
+      success: "Sửa thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BlogsModel.findByIdAndUpdate(id, data)
+    await BookingModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -154,11 +183,11 @@ router.delete("/deleteone/", async (req, res) => {
   try {
     const { id } = req.query;
     const message = {
-      success: "Xóa tin tức thành công.",
+      success: "Xóa thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (id) {
-      await BlogsModel.findByIdAndDelete(id)
+      await BookingModel.findByIdAndDelete(id)
         .then((result) => {
           res.status(200).json({
             success: true,
@@ -179,34 +208,6 @@ router.delete("/deleteone/", async (req, res) => {
     }
   } catch (err) {
     if (err) throw err;
-  }
-});
-
-router.put("/increaseviews", async (req, res) => {
-  try {
-    const { id } = req.body;
-    if (id) {
-      await BlogsModel.findByIdAndUpdate(id, { $inc: { countRead: 1 } })
-        .then(() => {
-          res.status(200).json({
-            success: true,
-            message: "Thành công",
-          });
-        })
-        .catch((err) => {
-          res.status(500).json({
-            success: false,
-            message: "Thất bại",
-            errors: err,
-          });
-        });
-    }
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Thất bại",
-      errors: err,
-    });
   }
 });
 

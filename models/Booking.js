@@ -1,28 +1,39 @@
+/** @format */
+
 const mongoose = require("mongoose");
 
 const Booking = new mongoose.Schema(
   {
-    idPitch: {
+    idKeyMain: {
+      type: String,
+    },
+    idParentPitch: {
+      type: String,
+    },
+    idChildPitch: {
       type: String,
     },
     timeStart: {
-      type: Date,
-      default: Date.now(),
+      type: String,
     },
     timeEnd: {
-      type: Date,
-      default: Date.now(),
+      type: String,
+    },
+    duration: {
+      type: String,
     },
     day: {
-      type: Date,
-      default: Date.now(),
-    },
-    idUser: {
       type: String,
+    },
+    infoUser: {
+      type: Object,
     },
     isPaypal: {
       type: Boolean,
       default: false,
+    },
+    infoPaypal: {
+      type: Object,
     },
     price: {
       type: String,

@@ -1,27 +1,36 @@
+/** @format */
+
 const router = require("express").Router();
-const BookingModel = require("../models/Booking.js");
+const BlogsModel = require("../models/Blogs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
-      success: "Thêm thanh toán thành công.",
+      success: "Thêm tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BookingModel.create(data)
-      .then(() => {
-        res.status(200).json({
-          success: true,
-          message: message.success,
+    if (data) {
+      await BlogsModel.create(data)
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: message.success,
+          });
+        })
+        .catch(() => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
+          });
         });
-      })
-      .catch(() => {
-        res.status(500).json({
-          success: false,
-          message: message.fail,
-        });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: message.fail,
       });
+    }
   } catch (err) {
     if (err) throw err;
   }
@@ -29,9 +38,9 @@ router.post("/addone", async (req, res) => {
 
 router.get("/getlist/", async (req, res) => {
   const { page } = req.query;
-  const perPage = 8;
+  const perPage = 12;
   if (page) {
-    await BookingModel.find()
+    await BlogsModel.find()
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then((result) => {
@@ -60,7 +69,7 @@ router.get("/getlist/", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await BookingModel.find()
+  await BlogsModel.find()
     .then((result) => {
       res.status(200).json({
         success: true,
@@ -68,12 +77,13 @@ router.get("/getall", async (req, res) => {
         result: result.map((item) => {
           return {
             key: "" + item._id,
-            ...item_doc,
+            ...item._doc,
           };
         }),
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).json({
         success: false,
         message: "Có lỗi. Vui lòng thử lại",
@@ -85,13 +95,13 @@ router.get("/getone/", async (req, res) => {
   try {
     const { id } = req.query;
     if (id) {
-      await BookingModel.findById(id)
+      await BlogsModel.findById(id)
         .then((result) => {
           res.status(200).json({
             success: true,
             message: "Thành công",
             result: {
-              ...result,
+              ...result._doc,
               key: result._id,
             },
           });
@@ -119,10 +129,10 @@ router.put("/updateone/", async (req, res) => {
     const { id } = req.query;
     const data = req.body;
     const message = {
-      success: "Sửa thanh toán thành công.",
+      success: "Sửa tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BookingModel.findByIdAndUpdate(id, data)
+    await BlogsModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -144,11 +154,11 @@ router.delete("/deleteone/", async (req, res) => {
   try {
     const { id } = req.query;
     const message = {
-      success: "Xóa thanh toán thành công.",
+      success: "Xóa tin tức thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
     if (id) {
-      await BookingModel.findByIdAndDelete(id)
+      await BlogsModel.findByIdAndDelete(id)
         .then((result) => {
           res.status(200).json({
             success: true,
@@ -169,6 +179,34 @@ router.delete("/deleteone/", async (req, res) => {
     }
   } catch (err) {
     if (err) throw err;
+  }
+});
+
+router.put("/increaseviews", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (id) {
+      await BlogsModel.findByIdAndUpdate(id, { $inc: { countRead: 1 } })
+        .then(() => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: "Thất bại",
+            errors: err,
+          });
+        });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Thất bại",
+      errors: err,
+    });
   }
 });
 
