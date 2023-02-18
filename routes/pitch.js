@@ -292,17 +292,25 @@ router.post("/find-empty-pitchs", async (req, res) => {
                 let skipLoop = false;
 
                 for (let x = 0; x < pitchChildToFind?.timeBooking.length; x++) {
-                  const timeStartPitchBooked = new Date(
-                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.timeStart
-                  ).getTime();
-                  const timeEndPitchBooked = new Date(
-                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.timeEnd
-                  ).getTime();
-                  if (
-                    timeLoopCurrent >= timeStartPitchBooked &&
-                    timeLoopCurrent <= timeEndPitchBooked
-                  ) {
-                    skipLoop = true;
+                  const dateBooked = Date.parse(
+                    pitchChildToFind?.timeBooking[x]?.day
+                  );
+
+                  if (dateBooked === dateToFind) {
+                    const timeStartPitchBooked = new Date(
+                      "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[0]
+                    ).getTime();
+                    const timeEndPitchBooked = new Date(
+                      "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[1]
+                    ).getTime();
+                    if (
+                      timeLoopCurrent >= timeStartPitchBooked &&
+                      timeLoopCurrent <= timeEndPitchBooked
+                    ) {
+                      skipLoop = true;
+                    }
+                  } else {
+                    continue;
                   }
                 }
 
@@ -315,13 +323,7 @@ router.post("/find-empty-pitchs", async (req, res) => {
               }
             }
           }
-        } else {
-          res.status(500).json({
-            success: false,
-            message: "Không tìm thấy thông tin sân",
-          });
         }
-
         res.status(200).json({
           success: true,
           message: "Thành công",
