@@ -34,7 +34,7 @@ router.post("/addone", async (req, res) => {
             randomId();
           console.log(uniqueId);
           // const dataPitchDetail = { ...dataPitch, children}
-          let dataChildren = { id: uniqueId, title: `${j}`, isBooking: false };
+          let dataChildren = { id: uniqueId, title: `${j}`, timeBooking: [] };
           listPitchs[i - 1].children.push(dataChildren);
           // const newPitch = await PicthDetailModel.create(dataPitch);
           // const idPitch = "" + newPitch._id;
@@ -249,6 +249,100 @@ router.delete("/deleteone/", async (req, res) => {
     }
   } catch (err) {
     if (err) throw err;
+  }
+});
+
+router.post("/find-empty-pitchs", async (req, res) => {
+  try {
+    const { idMainPitch, idPitch, keyChildren, duration, date } = req.body;
+    const arrayResponse = [];
+
+    PitchsModel.findById(idMainPitch)
+      .then((pitchMain) => {
+        const pitchToFind = pitchMain?.listPitchs.find(
+          (item) => item?.id === idPitch
+        );
+        const pitchChildToFind = pitchToFind?.children.find(
+          (itemChild) => itemChild?.id === keyChildren
+        );
+
+        if (pitchChildToFind) {
+          for (let i = 0; i < pitchToFind?.infoPitchs.length; i++) {
+            const dateStart = Date.parse(pitchToFind?.infoPitchs[i]?.day[0]);
+            const dateEnd = Date.parse(pitchToFind?.infoPitchs[i]?.day[1]);
+            const dateToFind = Date.parse(date);
+
+            if (dateToFind >= dateStart && dateToFind <= dateEnd) {
+              const timeStart = pitchToFind?.infoPitchs[i]?.hour[0];
+              const timeEnd = pitchToFind?.infoPitchs[i]?.hour[1];
+
+              const timeStartConverted = new Date(
+                "2023-02-18T" + timeStart
+              ).getTime();
+              const timeEndConverted = new Date(
+                "2023-02-18T" + timeEnd
+              ).getTime();
+
+              for (
+                let j = timeStartConverted;
+                j <= timeEndConverted;
+                j += 30 * 60 * 1000
+              ) {
+                const timeLoopCurrent = j;
+                let skipLoop = false;
+
+                for (let x = 0; x < pitchChildToFind?.timeBooking.length; x++) {
+                  const timeStartPitchBooked = new Date(
+                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.timeStart
+                  ).getTime();
+                  const timeEndPitchBooked = new Date(
+                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.timeEnd
+                  ).getTime();
+                  if (
+                    timeLoopCurrent >= timeStartPitchBooked &&
+                    timeLoopCurrent <= timeEndPitchBooked
+                  ) {
+                    skipLoop = true;
+                  }
+                }
+
+                if (skipLoop) {
+                  continue;
+                }
+                arrayResponse.push(
+                  new Date(timeLoopCurrent).toLocaleTimeString("en-Us", {
+                    timeZone: "Asia/Jakarta",
+                  })
+                );
+              }
+            }
+          }
+        } else {
+          res.status(500).json({
+            success: false,
+            message: "Không tìm thấy thông tin sân",
+          });
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          result: arrayResponse,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "Thất bại",
+          errors: err,
+        });
+      });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Thất bại",
+      errors: err,
+    });
   }
 });
 
