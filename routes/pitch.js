@@ -11,7 +11,7 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     const data = req.body;
-    // let listIdPitch = [];
+    // let listidParent = [];
     let { listPitchs, ...others } = data;
 
     if (listPitchs.length > 0) {
@@ -254,16 +254,16 @@ router.delete("/deleteone/", async (req, res) => {
 
 router.post("/find-empty-pitchs", async (req, res) => {
   try {
-    const { idMainPitch, idPitch, keyChildren, duration, date } = req.body;
+    const { keyMainPitch, idParent, idChildren, duration, date } = req.body;
     const arrayResponse = [];
 
-    PitchsModel.findById(idMainPitch)
+    PitchsModel.findById(keyMainPitch)
       .then((pitchMain) => {
         const pitchToFind = pitchMain?.listPitchs.find(
-          (item) => item?.id === idPitch
+          (item) => item?.id === idParent
         );
         const pitchChildToFind = pitchToFind?.children.find(
-          (itemChild) => itemChild?.id === keyChildren
+          (itemChild) => itemChild?.id === idChildren
         );
 
         if (pitchChildToFind) {
