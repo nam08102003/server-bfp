@@ -309,7 +309,7 @@ router.post("/find-empty-pitchs", async (req, res) => {
                 if (skipLoop) {
                   continue;
                 }
-                arrayResponse.push(new Date(timeLoopCurrent).getTime());
+                arrayResponse.push(new Date(timeLoopCurrent));
               }
             }
           }
