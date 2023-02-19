@@ -272,6 +272,8 @@ router.post("/find-empty-pitchs", async (req, res) => {
             const dateEnd = Date.parse(pitchToFind?.infoPitchs[i]?.day[1]);
             const dateToFind = Date.parse(date);
 
+            const pricePitch = pitchToFind?.infoPitchs[i]?.price;
+
             if (dateToFind >= dateStart && dateToFind <= dateEnd) {
               const timeStart = pitchToFind?.infoPitchs[i]?.hour[0];
               const timeEnd = pitchToFind?.infoPitchs[i]?.hour[1];
@@ -317,9 +319,10 @@ router.post("/find-empty-pitchs", async (req, res) => {
                 if (skipLoop) {
                   continue;
                 }
-                arrayResponse.push(
-                  new Date(timeLoopCurrent).toTimeString().slice(0, 5)
-                );
+                arrayResponse.push({
+                  time: new Date(timeLoopCurrent).toTimeString().slice(0, 5),
+                  price: pricePitch,
+                });
               }
             }
           }
