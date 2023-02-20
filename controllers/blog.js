@@ -37,8 +37,8 @@ router.post("/addone", async (req, res) => {
 });
 
 router.get("/getlist/", async (req, res) => {
-  const { page } = req.query;
-  const perPage = 12;
+  const { page, amount } = req.query;
+  const perPage = amount || 8;
   if (page) {
     await BlogsModel.find()
       .limit(perPage)
