@@ -3,6 +3,7 @@
 const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
+const { checkTime } = require("../services/checkTime.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -254,7 +255,7 @@ router.delete("/deleteone/", async (req, res) => {
 
 router.post("/find-empty-pitchs", async (req, res) => {
   try {
-    const { keyMainPitch, idParent, idChildren, duration, date } = req.body;
+    const { keyMainPitch, idParent, idChildren, date } = req.body;
     const arrayResponse = [];
 
     PitchsModel.findById(keyMainPitch)
@@ -319,10 +320,39 @@ router.post("/find-empty-pitchs", async (req, res) => {
                 if (skipLoop) {
                   continue;
                 }
-                arrayResponse.push({
-                  time: new Date(timeLoopCurrent).toTimeString().slice(0, 5),
-                  price: pricePitch,
-                });
+
+                const timeResponse = new Date(timeLoopCurrent)
+                  .toTimeString()
+                  .slice(0, 5);
+
+                if (checkTime(arrayResponse, timeResponse) !== 0) {
+                  const position = checkTime(arrayResponse, timeResponse);
+                  console.log(position);
+                  arrayResponse[position - 1] = {
+                    time: timeResponse,
+                    price: pricePitch,
+                  };
+                } else {
+                  arrayResponse.push({
+                    time: timeResponse,
+                    price: pricePitch,
+                  });
+                }
+
+                // arrayResponse.forEach((element, index) => {
+                //   if (element.time === timeResponse) {
+                //     arrayResponse[index] = {
+                //       time: timeResponse,
+                //       price: pricePitch,
+                //     };
+                //   } else {
+                //     arrayResponse.push({
+                //       time: timeResponse,
+                //       price: pricePitch,
+                //     });
+                //   }
+                //   console.log("res", arrayResponse);
+                // });
               }
             }
           }
