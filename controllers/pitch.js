@@ -327,32 +327,24 @@ router.post("/find-empty-pitchs", async (req, res) => {
 
                 if (checkTime(arrayResponse, timeResponse) !== 0) {
                   const position = checkTime(arrayResponse, timeResponse);
-                  console.log(position);
                   arrayResponse[position - 1] = {
                     time: timeResponse,
                     price: pricePitch,
+                    saleOff: true,
+                    decrease:
+                      ((Number(arrayResponse[position - 1].price) -
+                        Number(pricePitch)) /
+                        Number(arrayResponse[position - 1].price)) *
+                      100,
                   };
                 } else {
                   arrayResponse.push({
                     time: timeResponse,
                     price: pricePitch,
+                    saleOff: false,
+                    decrease: 0,
                   });
                 }
-
-                // arrayResponse.forEach((element, index) => {
-                //   if (element.time === timeResponse) {
-                //     arrayResponse[index] = {
-                //       time: timeResponse,
-                //       price: pricePitch,
-                //     };
-                //   } else {
-                //     arrayResponse.push({
-                //       time: timeResponse,
-                //       price: pricePitch,
-                //     });
-                //   }
-                //   console.log("res", arrayResponse);
-                // });
               }
             }
           }
