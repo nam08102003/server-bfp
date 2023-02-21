@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const Booking = new mongoose.Schema(
   {
-    idKeyMain: {
+    keyMainPitch: {
       type: String,
     },
     idParentPitch: {

@@ -4,6 +4,7 @@ const router = require("express").Router();
 const BookingModel = require("../models/Booking.js");
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
+const { findInfoPitch } = require("../services/findInfoPitch.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -22,44 +23,49 @@ router.post("/addone", async (req, res) => {
       hour: [data?.timeStart, timeEndConvert],
       day: data?.day,
     };
-    await PitchsModel.findByIdAndUpdate(
-      data?.keyMainPitch,
-      {
-        $addToSet: {
-          "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
+    if (data?.keyMainPitch) {
+      PitchsModel.findByIdAndUpdate(
+        data?.keyMainPitch,
+        {
+          $addToSet: {
+            "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
+          },
         },
-      },
-      {
-        arrayFilters: [
-          { "x.id": data?.idParentPitch },
-          { "y.id": data?.idChildPitch },
-        ],
-        new: true,
-      }
-    )
-      .then(() => {
-        BookingModel.create({ ...data, timeEnd: timeEndConvert })
-          .then(() => {
-            res.status(200).json({
-              success: true,
-              message: message.success,
+        {
+          arrayFilters: [
+            { "x.id": data?.idParentPitch },
+            { "y.id": data?.idChildPitch },
+          ],
+          new: true,
+        }
+      )
+        .then(() => {
+          BookingModel.create({ ...data, timeEnd: timeEndConvert })
+            .then(() => {
+              res.status(200).json({
+                success: true,
+                message: message.success,
+              });
+            })
+            .catch((err) => {
+              res.status(500).json({
+                success: false,
+                message: message.fail,
+              });
             });
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(500).json({
-              success: false,
-              message: message.fail,
-            });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: message.fail,
           });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          success: false,
-          message: message.fail,
         });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Không có thông tin sân.",
       });
+    }
   } catch (err) {
     if (err) throw err;
   }
@@ -98,25 +104,32 @@ router.get("/getlist/", async (req, res) => {
 });
 
 router.get("/getall", async (req, res) => {
-  await BookingModel.find()
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: "Thành công",
-        result: result.map((item) => {
-          return {
-            key: "" + item._id,
-            ...item_doc,
-          };
-        }),
+  try {
+    await BookingModel.find()
+      .then((result) => {
+        findInfoPitch(result).then((infoPitchs) => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            result: infoPitchs.map((item) => {
+              return {
+                key: "" + item._id,
+                ...item,
+              };
+            }),
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          success: false,
+          message: "Có lỗi. Vui lòng thử lại",
+        });
       });
-    })
-    .catch(() => {
-      res.status(500).json({
-        success: false,
-        message: "Có lỗi. Vui lòng thử lại",
-      });
-    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.get("/getone/", async (req, res) => {

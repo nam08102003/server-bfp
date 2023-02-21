@@ -253,6 +253,7 @@ router.delete("/deleteone/", async (req, res) => {
   }
 });
 
+// Lấy danh sách thời gian trống
 router.post("/find-empty-pitchs", async (req, res) => {
   try {
     const { keyMainPitch, idParent, idChildren, date } = req.body;
