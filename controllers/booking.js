@@ -5,6 +5,7 @@ const BookingModel = require("../models/Booking.js");
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const { findInfoPitch } = require("../services/findInfoPitch.js");
+const { updateInfoPitch } = require("../services/updateInfoPitchs.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -18,41 +19,14 @@ router.post("/addone", async (req, res) => {
       Number(data?.duration) * 60 * 1000;
 
     const timeEndConvert = new Date(timeEnd).toTimeString().slice(0, 5);
-    console.log(timeEndConvert);
-    const dataUpdatePitch = {
-      hour: [data?.timeStart, timeEndConvert],
-      day: data?.day,
-    };
+
     if (data?.keyMainPitch) {
-      PitchsModel.findByIdAndUpdate(
-        data?.keyMainPitch,
-        {
-          $addToSet: {
-            "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
-          },
-        },
-        {
-          arrayFilters: [
-            { "x.id": data?.idParentPitch },
-            { "y.id": data?.idChildPitch },
-          ],
-          new: true,
-        }
-      )
+      BookingModel.create({ ...data, timeEnd: timeEndConvert })
         .then(() => {
-          BookingModel.create({ ...data, timeEnd: timeEndConvert })
-            .then(() => {
-              res.status(200).json({
-                success: true,
-                message: message.success,
-              });
-            })
-            .catch((err) => {
-              res.status(500).json({
-                success: false,
-                message: message.fail,
-              });
-            });
+          res.status(200).json({
+            success: true,
+            message: message.success,
+          });
         })
         .catch((err) => {
           res.status(500).json({
@@ -168,12 +142,16 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
-    const isBooked = req.body;
+    const data = req.body;
     const message = {
       success: "Thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BookingModel.findByIdAndUpdate(id, { isBooked })
+
+    if (data?.isBooked) {
+      updateInfoPitch(id);
+    }
+    await BookingModel.findByIdAndUpdate(id, { isBooked: data?.isBooked })
       .then(() => {
         res.status(200).json({
           success: true,
