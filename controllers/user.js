@@ -3,6 +3,7 @@
 const router = require("express").Router();
 const UsersModel = require("../models/Users.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
+const bcryptjs = require("bcryptjs");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -12,8 +13,9 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     const { password } = data;
-    const userDB = await UsersModel.find(data?.username);
+    const userDB = await UsersModel.findOne({ username: data?.username });
     if (userDB) {
+      console.log(1);
       message.fail = "Tài khoản đã tồn tại";
       res.status(500).json({
         success: false,

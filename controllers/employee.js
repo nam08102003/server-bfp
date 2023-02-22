@@ -14,7 +14,7 @@ router.post("/addone", async (req, res) => {
     };
 
     const { password } = data;
-    const userDB = await UsersModel.find(data?.username);
+    const userDB = await UsersModel.findOne({ username: data?.username });
     if (userDB) {
       message.fail = "Tài khoản đã tồn tại";
       res.status(500).json({
