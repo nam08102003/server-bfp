@@ -168,12 +168,12 @@ router.get("/getone/", async (req, res) => {
 router.put("/updateone/", async (req, res) => {
   try {
     const { id } = req.query;
-    const data = req.body;
+    const isBooked = req.body;
     const message = {
-      success: "Sửa thanh toán thành công.",
+      success: "Thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
-    await BookingModel.findByIdAndUpdate(id, data)
+    await BookingModel.findByIdAndUpdate(id, { isBooked })
       .then(() => {
         res.status(200).json({
           success: true,

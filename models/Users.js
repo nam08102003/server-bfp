@@ -45,9 +45,6 @@ const Users = new mongoose.Schema(
       type: Number,
       default: 1,
     },
-    positionId: {
-      type: Number,
-    },
     gender: {
       type: String,
       default: "",

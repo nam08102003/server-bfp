@@ -28,7 +28,7 @@ const Booking = new mongoose.Schema(
     infoUser: {
       type: Object,
     },
-    isPaypal: {
+    isBooked: {
       type: Boolean,
       default: false,
     },
