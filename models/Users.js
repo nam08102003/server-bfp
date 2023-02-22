@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 
 const Users = new mongoose.Schema(
   {
+    fullname: {
+      type: String,
+      default: "",
+    },
     username: {
       type: String,
       min: 6,
