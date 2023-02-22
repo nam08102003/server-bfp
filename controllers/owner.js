@@ -24,7 +24,7 @@ router.post("/addone", async (req, res) => {
       const salt = bcryptjs.genSaltSync(10);
       const hashPassword = bcryptjs.hashSync(password, salt);
 
-      await UsersModel.create({ ...data, password: hashPassword, roleId: 2 })
+      await UsersModel.create({ ...data, password: hashPassword, roleId: 3 })
         .then(() => {
           res.status(200).json({
             success: true,
