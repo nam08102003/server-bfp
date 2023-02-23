@@ -4,6 +4,7 @@ const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const { checkTime } = require("../services/checkTime.js");
+const { filterTime } = require("../services/filterTime.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -256,7 +257,7 @@ router.delete("/deleteone/", async (req, res) => {
 // Lấy danh sách thời gian trống
 router.post("/find-empty-pitchs", async (req, res) => {
   try {
-    const { keyMainPitch, idParent, idChildren, date } = req.body;
+    const { keyMainPitch, idParent, idChildren, duration, date } = req.body;
     const arrayResponse = [];
 
     PitchsModel.findById(keyMainPitch)
@@ -307,9 +308,23 @@ router.post("/find-empty-pitchs", async (req, res) => {
                     const timeEndPitchBooked = new Date(
                       "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[1]
                     ).getTime();
+
+                    // if (
+                    //   timeLoopCurrent + Number(duration) * 60 * 1000 >=
+                    //     timeStartPitchBooked &&
+                    //   timeLoopCurrent + Number(duration) * 60 * 1000 <
+                    //     timeEndPitchBooked
+                    // ) {
+                    //   continue;
+                    // }
+
                     if (
-                      timeLoopCurrent >= timeStartPitchBooked &&
-                      timeLoopCurrent <= timeEndPitchBooked
+                      (timeLoopCurrent >= timeStartPitchBooked &&
+                        timeLoopCurrent < timeEndPitchBooked) ||
+                      (timeLoopCurrent + Number(duration) * 60 * 1000 >=
+                        timeStartPitchBooked &&
+                        timeLoopCurrent + Number(duration) * 60 * 1000 <
+                          timeEndPitchBooked)
                     ) {
                       skipLoop = true;
                     }
@@ -350,6 +365,9 @@ router.post("/find-empty-pitchs", async (req, res) => {
             }
           }
         }
+
+        // const arrayFilterTime = filterTime(arrayResponse, duration);
+        // console.log(arrayFilterTime);
         res.status(200).json({
           success: true,
           message: "Thành công",

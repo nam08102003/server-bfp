@@ -37,7 +37,7 @@ router.post("/addone", async (req, res) => {
 });
 
 router.get("/getlist/", async (req, res) => {
-  const { page, amount } = req.query;
+  const { page, amount, typeBlog } = req.query;
   const perPage = amount || 8;
   if (page) {
     await BlogsModel.find()
