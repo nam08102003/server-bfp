@@ -3,19 +3,37 @@
 const PitchsModel = require("../models/Pitchs.js");
 const BookingModel = require("../models/Booking.js");
 
-async function updateInfoPitch(id) {
-  const infoBooking = await BookingModel.findById(id);
-
+async function updateTimeBooked(data) {
   const dataUpdatePitch = {
-    hour: [infoBooking?.timeStart, infoBooking?.timeEnd],
-    day: infoBooking?.day,
+    hour: [data?.timeStart, data?.timeEnd],
+    day: data?.day,
   };
+
+  await PitchsModel.findByIdAndUpdate(
+    data?.keyMainPitch,
+    {
+      $addToSet: {
+        "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
+      },
+    },
+    {
+      arrayFilters: [
+        { "x.id": data?.idParentPitch },
+        { "y.id": data?.idChildPitch },
+      ],
+      new: true,
+    }
+  );
+}
+
+async function deleteTimeBooked(id, timeBooked) {
+  const infoBooking = await BookingModel.findById(id);
 
   await PitchsModel.findByIdAndUpdate(
     infoBooking?.keyMainPitch,
     {
-      $addToSet: {
-        "listPitchs.$[x].children.$[y].timeBooking": dataUpdatePitch,
+      $pull: {
+        "listPitchs.$[x].children.$[y].timeBooking": timeBooked,
       },
     },
     {
@@ -24,8 +42,9 @@ async function updateInfoPitch(id) {
         { "y.id": infoBooking?.idChildPitch },
       ],
       new: true,
+      multi: true,
     }
   );
 }
 
-module.exports = { updateInfoPitch };
+module.exports = { updateTimeBooked, deleteTimeBooked };

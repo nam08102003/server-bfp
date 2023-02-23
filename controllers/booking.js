@@ -5,7 +5,10 @@ const BookingModel = require("../models/Booking.js");
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const { findInfoPitch } = require("../services/findInfoPitch.js");
-const { updateInfoPitch } = require("../services/updateInfoPitchs.js");
+const {
+  updateTimeBooked,
+  deleteTimeBooked,
+} = require("../services/updateInfoPitchs.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -20,7 +23,18 @@ router.post("/addone", async (req, res) => {
 
     const timeEndConvert = new Date(timeEnd).toTimeString().slice(0, 5);
 
+    const dataUpdate = {
+      keyMainPitch: data?.keyMainPitch,
+      idChildPitch: data?.idChildPitch,
+      idParentPitch: data?.idParentPitch,
+      timeStart: data?.timeStart,
+      timeEnd: timeEndConvert,
+      day: data?.day,
+    };
+
     if (data?.keyMainPitch) {
+      await updateTimeBooked(dataUpdate);
+
       BookingModel.create({ ...data, timeEnd: timeEndConvert })
         .then(() => {
           res.status(200).json({
@@ -148,10 +162,7 @@ router.put("/updateone/", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
 
-    if (data?.isBooked) {
-      updateInfoPitch(id);
-    }
-    await BookingModel.findByIdAndUpdate(id, { isBooked: data?.isBooked })
+    await BookingModel.findByIdAndUpdate(id, data)
       .then(() => {
         res.status(200).json({
           success: true,
@@ -172,10 +183,14 @@ router.put("/updateone/", async (req, res) => {
 router.delete("/deleteone/", async (req, res) => {
   try {
     const { id } = req.query;
+    const data = req.body;
     const message = {
       success: "Xóa thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
+    if (data?.isBooked === "false" || !data?.isBooked) {
+      await deleteTimeBooked(id, data?.timeBooked);
+    }
     if (id) {
       await BookingModel.findByIdAndDelete(id)
         .then((result) => {

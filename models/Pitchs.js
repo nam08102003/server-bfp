@@ -72,6 +72,18 @@ const Pitchs = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    bankAccount: {
+      type: Array,
+      default: [],
+    },
+    timeInWork: {
+      type: Array,
+      default: [],
+    },
+    duration: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
