@@ -14,6 +14,18 @@ try {
   const port = process.env.PORT || 3000;
 
   server.use(express.json({ limit: "100mb" }));
+
+  server.use(function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Authorization"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    next();
+  });
+
   server.use(cors({ origin: true }));
   server.use(express.urlencoded({ extended: true }));
 
