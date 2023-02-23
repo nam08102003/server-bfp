@@ -4,7 +4,6 @@ const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const { checkTime } = require("../services/checkTime.js");
-const { filterTime } = require("../services/filterTime.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -309,15 +308,6 @@ router.post("/find-empty-pitchs", async (req, res) => {
                       "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[1]
                     ).getTime();
 
-                    // if (
-                    //   timeLoopCurrent + Number(duration) * 60 * 1000 >=
-                    //     timeStartPitchBooked &&
-                    //   timeLoopCurrent + Number(duration) * 60 * 1000 <
-                    //     timeEndPitchBooked
-                    // ) {
-                    //   continue;
-                    // }
-
                     if (
                       (timeLoopCurrent >= timeStartPitchBooked &&
                         timeLoopCurrent < timeEndPitchBooked) ||
@@ -366,8 +356,6 @@ router.post("/find-empty-pitchs", async (req, res) => {
           }
         }
 
-        // const arrayFilterTime = filterTime(arrayResponse, duration);
-        // console.log(arrayFilterTime);
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -389,5 +377,14 @@ router.post("/find-empty-pitchs", async (req, res) => {
     });
   }
 });
+
+// router.get('/filter-pitchs', async (req, res) => {
+//   try {
+//     const data = req.query
+//   }
+//   catch(err) {
+//     console.log(err)
+//   }
+// })
 
 module.exports = router;

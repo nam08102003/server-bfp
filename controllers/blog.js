@@ -40,31 +40,61 @@ router.get("/getlist/", async (req, res) => {
   const { page, amount, typeBlog } = req.query;
   const perPage = amount || 8;
   if (page) {
-    await BlogsModel.find()
-      .limit(perPage)
-      .skip(perPage * (page - 1))
-      .then((result) => {
-        res.status(200).json({
-          success: true,
-          message: "Thành công",
-          pagination: {
-            currentPage: page,
-            length: result.length,
-          },
-          result: result.map((item) => {
-            return {
-              key: "" + item._id,
-              ...item._doc,
-            };
-          }),
+    if (typeBlog === "" || !typeBlog) {
+      BlogsModel.find()
+        .limit(perPage)
+        .skip(perPage * (page - 1))
+        .then((result) => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            pagination: {
+              currentPage: page,
+              length: result.length,
+            },
+            result: result?.map((item) => {
+              return {
+                key: "" + item._id,
+                ...item._doc,
+              };
+            }),
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json({
+            success: false,
+            message: "Có lỗi. Vui lòng thử lại",
+          });
         });
-      })
-      .catch(() => {
-        res.status(500).json({
-          success: false,
-          message: "Có lỗi. Vui lòng thử lại",
+    } else {
+      BlogsModel.find({ typeBlog })
+        .limit(perPage)
+        .skip(perPage * (page - 1))
+        .then((result) => {
+          res.status(200).json({
+            success: true,
+            message: "Thành công",
+            pagination: {
+              currentPage: page,
+              length: result.length,
+            },
+            result: result?.map((item) => {
+              return {
+                key: "" + item._id,
+                ...item._doc,
+              };
+            }),
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json({
+            success: false,
+            message: "Có lỗi. Vui lòng thử lại",
+          });
         });
-      });
+    }
   }
 });
 
