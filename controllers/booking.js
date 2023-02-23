@@ -188,8 +188,12 @@ router.delete("/deleteone/", async (req, res) => {
       success: "Xóa thanh toán thành công.",
       fail: "Thất bại. Vui lòng thử lại",
     };
+    const timeBooked = {
+      hour: [data?.timeStart, data?.timeEnd],
+      day: data?.day,
+    };
     if (data?.isBooked === "false" || !data?.isBooked) {
-      await deleteTimeBooked(id, data?.timeBooked);
+      await deleteTimeBooked(id, timeBooked);
     }
     if (id) {
       await BookingModel.findByIdAndDelete(id)
