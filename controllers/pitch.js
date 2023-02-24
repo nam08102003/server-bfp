@@ -300,26 +300,30 @@ router.post("/find-empty-pitchs", async (req, res) => {
                     pitchChildToFind?.timeBooking[x]?.day
                   );
 
-                  if (dateBooked === dateToFind) {
-                    const timeStartPitchBooked = new Date(
-                      "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[0]
-                    ).getTime();
-                    const timeEndPitchBooked = new Date(
-                      "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[1]
-                    ).getTime();
+                  const timeStartPitchBooked = new Date(
+                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[0]
+                  ).getTime();
+                  const timeEndPitchBooked = new Date(
+                    "2023-02-18T" + pitchChildToFind?.timeBooking[x]?.hour[1]
+                  ).getTime();
 
+                  if (dateBooked === dateToFind) {
                     if (
-                      (timeLoopCurrent >= timeStartPitchBooked &&
-                        timeLoopCurrent < timeEndPitchBooked) ||
-                      (timeLoopCurrent + Number(duration) * 60 * 1000 >=
-                        timeStartPitchBooked &&
-                        timeLoopCurrent + Number(duration) * 60 * 1000 <
-                          timeEndPitchBooked)
+                      timeLoopCurrent >= timeStartPitchBooked &&
+                      timeLoopCurrent < timeEndPitchBooked
                     ) {
                       skipLoop = true;
                     }
                   } else {
                     continue;
+                  }
+
+                  if (
+                    timeLoopCurrent < timeStartPitchBooked &&
+                    timeStartPitchBooked - timeLoopCurrent <
+                      Number(duration) * 60 * 1000
+                  ) {
+                    skipLoop = true;
                   }
                 }
 
