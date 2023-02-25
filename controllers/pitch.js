@@ -4,6 +4,8 @@ const router = require("express").Router();
 const PitchsModel = require("../models/Pitchs.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 const { checkTime } = require("../services/checkTime.js");
+const { filterPitchs } = require("../services/filterPitchs.js");
+const { getMinMax } = require("../services/getMinMax.js");
 
 router.post("/addone", async (req, res) => {
   try {
@@ -12,12 +14,10 @@ router.post("/addone", async (req, res) => {
       fail: "Thất bại. Vui lòng thử lại",
     };
     const data = req.body;
-    // let listidParent = [];
     let { listPitchs, ...others } = data;
 
     if (listPitchs.length > 0) {
       for (let i = 1; i <= listPitchs.length; i++) {
-        // const dataPitch = listPitchs[i - 1];
         const amountPitch = Number(listPitchs[i - 1].amountPitch);
         listPitchs[i - 1].children = [];
         for (let j = 1; j <= amountPitch; j++) {
@@ -34,12 +34,8 @@ router.post("/addone", async (req, res) => {
             randomId() +
             randomId();
           console.log(uniqueId);
-          // const dataPitchDetail = { ...dataPitch, children}
           let dataChildren = { id: uniqueId, title: `${j}`, timeBooking: [] };
           listPitchs[i - 1].children.push(dataChildren);
-          // const newPitch = await PicthDetailModel.create(dataPitch);
-          // const idPitch = "" + newPitch._id;
-          // listIdPitch.push(idPitch);
         }
       }
 
@@ -73,21 +69,7 @@ router.get("/getlist/", async (req, res) => {
       .limit(perPage)
       .skip(perPage * (page - 1))
       .then((result) => {
-        const minMaxPrice = [];
-        for (let i = 0; i < result.length; i++) {
-          const arrayPrice = [];
-          for (let j = 0; j < result[i]?.listPitchs.length; j++) {
-            let listPitch = result[i]?.listPitchs[j];
-            for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
-              const price = Number(listPitch?.infoPitchs[x]?.price);
-              arrayPrice.push(price);
-            }
-          }
-          minMaxPrice.push({
-            minPrice: Number(Math.min(...arrayPrice)),
-            maxPrice: Number(Math.max(...arrayPrice)),
-          });
-        }
+        const minMaxPrice = getMinMax(result);
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -119,21 +101,6 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
-        const minMaxPrice = [];
-        for (let i = 0; i < result.length; i++) {
-          const arrayPrice = [];
-          for (let j = 0; j < result[i]?.listPitchs.length; j++) {
-            let listPitch = result[i]?.listPitchs[j];
-            for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
-              const price = Number(listPitch?.infoPitchs[x]?.price);
-              arrayPrice.push(price);
-            }
-          }
-          minMaxPrice.push({
-            minPrice: Number(Math.min(...arrayPrice)),
-            maxPrice: Number(Math.max(...arrayPrice)),
-          });
-        }
         res.status(200).json({
           success: true,
           message: "Thành công",
@@ -382,13 +349,50 @@ router.post("/find-empty-pitchs", async (req, res) => {
   }
 });
 
-// router.get('/filter-pitchs', async (req, res) => {
+router.get("/getlistactive", async (req, res) => {
+  try {
+    const { amount } = req.query || 8;
+    const { page } = req.query || 1;
+    PitchsModel.find({ isActive: true })
+      .limit(amount)
+      .skip(amount * (page - 1))
+      .then((result) => {
+        const minMaxPrice = getMinMax(result);
+        res.status(200).json({
+          success: true,
+          message: "Thành công",
+          pagination: {
+            currentPage: page,
+            length: result?.length,
+          },
+          result: result.map((item, index) => {
+            return {
+              key: "" + item?._id,
+              ...item?._doc,
+              ...minMaxPrice[index],
+            };
+          }),
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: "Thất bại",
+        });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// router.get("/filter-pitchs", async (req, res) => {
 //   try {
-//     const data = req.query
+//     const data = req.query;
+
+//     console.log(filterPitchs(data));
+//   } catch (err) {
+//     console.log(err);
 //   }
-//   catch(err) {
-//     console.log(err)
-//   }
-// })
+// });
 
 module.exports = router;

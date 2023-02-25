@@ -1,71 +1,23 @@
 /** @format */
 
-const PitchsModel = require("../models/Pitchs.js");
-
-module.exports = async () => {
-  let data = [];
-  await PitchsModel.aggregate([
-    {
-      $project: {
-        minPrice: {
-          $min: {
-            $reduce: {
-              input: {
-                $map: {
-                  input: "$listPitchs",
-                  as: "listPitch",
-                  in: {
-                    $map: {
-                      input: "$$listPitch.infoPitchs",
-                      as: "infoPitch",
-                      in: {
-                        $toInt: "$$infoPitch.price",
-                      },
-                    },
-                  },
-                },
-              },
-              initialValue: [],
-              in: {
-                $concatArrays: ["$$value", "$$this"],
-              },
-            },
-          },
-        },
-        maxPrice: {
-          $max: {
-            $reduce: {
-              input: {
-                $map: {
-                  input: "$listPitchs",
-                  as: "listPitch",
-                  in: {
-                    $map: {
-                      input: "$$listPitch.infoPitchs",
-                      as: "infoPitch",
-                      in: {
-                        $toInt: "$$infoPitch.price",
-                      },
-                    },
-                  },
-                },
-              },
-              initialValue: [],
-              in: {
-                $concatArrays: ["$$value", "$$this"],
-              },
-            },
-          },
-        },
-      },
-    },
-  ])
-    .then((result) => {
-      data = result;
-    })
-    .catch((err) => {
-      data = err;
+function getMinMax(result) {
+  const minMaxPrice = [];
+  for (let i = 0; i < result.length; i++) {
+    const arrayPrice = [];
+    for (let j = 0; j < result[i]?.listPitchs.length; j++) {
+      let listPitch = result[i]?.listPitchs[j];
+      for (let x = 0; x < listPitch?.infoPitchs.length; x++) {
+        const price = Number(listPitch?.infoPitchs[x]?.price);
+        arrayPrice.push(price);
+      }
+    }
+    minMaxPrice.push({
+      minPrice: Number(Math.min(...arrayPrice)),
+      maxPrice: Number(Math.max(...arrayPrice)),
     });
+  }
 
-  return data;
-};
+  return minMaxPrice;
+}
+
+module.exports = { getMinMax };
