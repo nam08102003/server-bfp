@@ -1,17 +1,12 @@
+/** @format */
+
 const router = require("express").Router();
 const CitiesModel = require("../models/Cities.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const {
-  createNewService,
-  getListService,
-  getOneService,
-  updateOneService,
-  deleteOneService,
-} = require("../services/CRUDService.js");
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Thêm thành phố thành công.",
       fail: "Thất bại. Vui lòng thử lại",

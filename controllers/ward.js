@@ -1,13 +1,8 @@
+/** @format */
+
 const router = require("express").Router();
 const WardsModel = require("../models/Wards.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
-const {
-  createNewService,
-  getListService,
-  getOneService,
-  updateOneService,
-  deleteOneService,
-} = require("../services/CRUDService.js");
 
 router.post("/addone", async (req, res) => {
   try {

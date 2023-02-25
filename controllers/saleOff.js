@@ -1,10 +1,12 @@
+/** @format */
+
 const router = require("express").Router();
 const SaleOffModel = require("../models/SaleOff.js");
 const verifyMiddleware = require("../middleware/verifyMiddleware.js");
 
 router.post("/addone", async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body;
     const message = {
       success: "Thêm khuyến mại thành công.",
       fail: "Thất bại. Vui lòng thử lại",
