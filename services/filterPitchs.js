@@ -21,7 +21,7 @@ async function filterPitchs(criteriaFilter) {
       }
     }
 
-    if (duration && typePitch) {
+    if (duration || typePitch) {
       if (duration) {
         const resultDuration = await PitchsModel.find({
           duration: { $in: [duration] },
