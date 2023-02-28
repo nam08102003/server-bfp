@@ -101,6 +101,7 @@ router.get("/getall", async (req, res) => {
   try {
     await PitchsModel.find()
       .then((result) => {
+        const minMaxPrice = getMinMax(result);
         res.status(200).json({
           success: true,
           message: "Thành công",
