@@ -52,6 +52,8 @@ async function filterPitchs(criteriaFilter) {
             }
           }
         }
+      } else {
+        arrayResult = arrayCheck2;
       }
     } else {
       arrayResult = arrayCheck;
