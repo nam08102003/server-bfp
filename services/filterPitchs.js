@@ -21,36 +21,40 @@ async function filterPitchs(criteriaFilter) {
       }
     }
 
-    if (duration) {
-      const resultDuration = await PitchsModel.find({
-        duration: { $in: [duration] },
-        isActive: true,
-      });
+    if (duration && typePitch) {
+      if (duration) {
+        const resultDuration = await PitchsModel.find({
+          duration: { $in: [duration] },
+          isActive: true,
+        });
 
-      for (let i = 0; i < resultDuration.length; i++) {
-        if (checkDate(resultDuration[i], { day, time })) {
-          if (checkHaveItem(arrayCheck, resultDuration[i]?._id)) {
-            arrayCheck2.push(resultDuration[i]);
+        for (let i = 0; i < resultDuration.length; i++) {
+          if (checkDate(resultDuration[i], { day, time })) {
+            if (checkHaveItem(arrayCheck, resultDuration[i]?._id)) {
+              arrayCheck2.push(resultDuration[i]);
+            }
           }
         }
       }
-    }
 
-    const arrayCheck3 = duration ? arrayCheck2 : arrayCheck;
+      const arrayCheck3 = duration ? arrayCheck2 : arrayCheck;
 
-    if (typePitch) {
-      const resultTypePitch = await PitchsModel.find({
-        listPitchs: { $elemMatch: { pitch: typePitch } },
-        isActive: true,
-      });
+      if (typePitch) {
+        const resultTypePitch = await PitchsModel.find({
+          listPitchs: { $elemMatch: { pitch: typePitch } },
+          isActive: true,
+        });
 
-      for (let i = 0; i < resultTypePitch.length; i++) {
-        if (checkDate(resultTypePitch[i], { day, time })) {
-          if (checkHaveItem(arrayCheck3, resultTypePitch[i]?._id)) {
-            arrayResult.push(resultTypePitch[i]);
+        for (let i = 0; i < resultTypePitch.length; i++) {
+          if (checkDate(resultTypePitch[i], { day, time })) {
+            if (checkHaveItem(arrayCheck3, resultTypePitch[i]?._id)) {
+              arrayResult.push(resultTypePitch[i]);
+            }
           }
         }
       }
+    } else {
+      arrayResult = arrayCheck;
     }
   }
 

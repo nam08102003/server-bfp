@@ -390,7 +390,6 @@ router.get("/filter-pitchs", async (req, res) => {
     const data = req.query;
 
     filterPitchs(data).then((result) => {
-      console.log(result.length);
       const minMaxPrice = getMinMax(result);
       res.status(200).json({
         success: true,
