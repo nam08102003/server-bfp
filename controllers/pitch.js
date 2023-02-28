@@ -198,7 +198,7 @@ router.delete("/deleteone/", async (req, res) => {
     };
     if (id) {
       await PitchsModel.findByIdAndDelete(id)
-        .then((result) => {
+        .then(() => {
           res.status(200).json({
             success: true,
             message: message.success,
@@ -208,6 +208,7 @@ router.delete("/deleteone/", async (req, res) => {
           res.status(500).json({
             success: false,
             message: message.fail,
+            errors: err,
           });
         });
     } else {
@@ -379,6 +380,7 @@ router.get("/getlistactive", async (req, res) => {
         res.status(500).json({
           success: false,
           message: "Thất bại",
+          errors: err,
         });
       });
   } catch (err) {
