@@ -97,9 +97,9 @@ router.get("/getlist/", async (req, res) => {
   }
 });
 
-router.get("/getall", (req, res) => {
+router.get("/getall", async (req, res) => {
   try {
-    PitchsModel.find()
+    await PitchsModel.find()
       .then((result) => {
         const minMaxPrice = getMinMax(result);
         res.status(200).json({
@@ -228,7 +228,7 @@ router.post("/find-empty-pitchs", async (req, res) => {
     const { keyMainPitch, idParent, idChildren, duration, date } = req.body;
     const arrayResponse = [];
 
-    PitchsModel.findById(keyMainPitch)
+    await PitchsModel.findById(keyMainPitch)
       .then((pitchMain) => {
         const pitchToFind = pitchMain?.listPitchs.find(
           (item) => item?.id === idParent
@@ -351,11 +351,11 @@ router.post("/find-empty-pitchs", async (req, res) => {
   }
 });
 
-router.get("/getlistactive", (req, res) => {
+router.get("/getlistactive", async (req, res) => {
   try {
     const { amount } = req.query || 8;
     const { page } = req.query || 1;
-    PitchsModel.find({ isActive: true })
+    await PitchsModel.find({ isActive: true })
       .limit(amount)
       .skip(amount * (page - 1))
       .then((result) => {
@@ -392,7 +392,7 @@ router.get("/filter-pitchs", async (req, res) => {
   try {
     const data = req.query;
 
-    filterPitchs(data).then((result) => {
+    await filterPitchs(data).then((result) => {
       const minMaxPrice = getMinMax(result);
       res.status(200).json({
         success: true,
