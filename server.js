@@ -44,8 +44,6 @@ try {
   );
   server.use(bodyParser.raw());
 
-  connectDB(process.env.DATABASE_URL);
-
   // Route api
   server.use("/v1/auth", require("./controllers/auth.js")),
     server.use("/v2/auth", require("./controllers/admin.js")),
@@ -63,13 +61,17 @@ try {
   server.use("/", (req, res) => {
     res.status(200).json("Server");
   });
-  server.listen(port, (err) => {
-    if (err) throw err;
-    console.log(`Example app listening on port ${port}`);
-  });
+
+  connectDB(process.env.DATABASE_URL)
+    .then(() => {
+      server.listen(port, (err) => {
+        if (err) throw err;
+        console.log(`Server open on port ${port}`);
+      });
+    })
+    .catch((err) => {
+      console.log("Error!!", err);
+    });
 } catch (err) {
-  res.status(500).json({
-    errors: err,
-    success: false,
-  });
+  if (err) console.log(err);
 }

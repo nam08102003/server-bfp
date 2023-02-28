@@ -2,10 +2,10 @@
 
 const mongoose = require("mongoose");
 
-function connectDB(urlDB) {
+async function connectDB(urlDB) {
   try {
-    mongoose.set("strictQuery", true);
-    mongoose
+    await mongoose.set("strictQuery", true);
+    await mongoose
       .connect(urlDB, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
