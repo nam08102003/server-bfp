@@ -53,10 +53,10 @@ async function filterPitchs(criteriaFilter) {
           }
         }
       } else {
-        arrayResult = arrayCheck2;
+        arrayResult.push(...arrayCheck2);
       }
     } else {
-      arrayResult = arrayCheck;
+      arrayResult.push(...arrayCheck);
     }
   }
 
