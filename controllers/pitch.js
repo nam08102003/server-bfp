@@ -385,14 +385,29 @@ router.get("/getlistactive", async (req, res) => {
   }
 });
 
-// router.get("/filter-pitchs", async (req, res) => {
-//   try {
-//     const data = req.query;
+router.get("/filter-pitchs", async (req, res) => {
+  try {
+    const data = req.query;
 
-//     console.log(filterPitchs(data));
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
+    filterPitchs(data).then((result) => {
+      console.log(result.length);
+      const minMaxPrice = getMinMax(result);
+      res.status(200).json({
+        success: true,
+        message: "Thành công",
+        length: result.length,
+        result: result.map((item, index) => {
+          return {
+            key: "" + item?._id,
+            ...item?._doc,
+            ...minMaxPrice[index],
+          };
+        }),
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = router;
