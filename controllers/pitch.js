@@ -97,9 +97,9 @@ router.get("/getlist/", async (req, res) => {
   }
 });
 
-router.get("/getall", async (req, res) => {
+router.get("/getall", (req, res) => {
   try {
-    await PitchsModel.find()
+    PitchsModel.find()
       .then((result) => {
         const minMaxPrice = getMinMax(result);
         res.status(200).json({
@@ -351,7 +351,7 @@ router.post("/find-empty-pitchs", async (req, res) => {
   }
 });
 
-router.get("/getlistactive", async (req, res) => {
+router.get("/getlistactive", (req, res) => {
   try {
     const { amount } = req.query || 8;
     const { page } = req.query || 1;
